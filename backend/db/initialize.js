@@ -44,6 +44,16 @@ const InitializeDB = async (
           WHERE key = "defaultCarbon"
         )`
       );
+
+      db.exec(
+        `INSERT INTO Configuration (key, value)
+        SELECT "measureInterval", 1000
+        WHERE NOT EXISTS (
+          SELECT 1 
+          FROM Configuration 
+          WHERE key = "measureInterval"
+        )`
+      );
 }
 
 export default InitializeDB;
