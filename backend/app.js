@@ -15,6 +15,12 @@ open({
 
     readSensorData(db);
 
+    app.get("/test", (req, res) => {
+      console.log(req);
+      console.log(res);
+      res.send("HI")
+    });
+
     app.listen(port, () => {
       console.log(`Online listening on port ${port}`);
     });
