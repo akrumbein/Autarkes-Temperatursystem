@@ -1,9 +1,9 @@
 const InitializeDB = async (
   db
 ) => {
-    db.exec(
+    /*db.exec(
         `DROP TABLE ROOMS`
-      );
+      );*/
       
     db.exec(
         `CREATE TABLE IF NOT EXISTS ROOMS 
