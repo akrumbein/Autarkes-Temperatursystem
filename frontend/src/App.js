@@ -1,41 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
-import Home from './roots/Home';
-import { useState } from 'react';
-import Rooms from './roots/Rooms';
-import Settings from './roots/Settings';
-import Export from './roots/Export';
+import "./App.css";
+import Home from "./routes/Home";
+import { useState } from "react";
+import Rooms from "./routes/Rooms";
+import Settings from "./routes/Settings";
+import Export from "./routes/Export";
+import HeaderButtons from "./components/HeaderButtons";
 
 function App() {
-
-  const [root, setRoot] = useState(0)
-  function click (site) {
-    setRoot(site);
-  }
+  const [route, setRoute] = useState(0);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
+    <div style={{backgroundColor:"#98a4ab", width:"100%", height:"100%"}}>
+    <div style={{
+      display: "flex",
+          paddingTop: "5%",
+          paddingLeft: "5%",
+          flexDirection:"column",
+          gap:20,
+          width:"90vw",
+          height:"100vw"
+    }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          maxWidth: 500,
+          justifyContent: "space-between",
+        }}
+      >
+        {["Home", "Rooms", "Settings", "Export"].map((ele, number) => {
+          return <HeaderButtons label={ele} onClick={() => setRoute(number)} />;
+        })}
+      </div>
 
-        <div style={{display: "flex", backgroundColor: "red", width: "100%"}}>  
-          <div style={{display: "flex", margin: "60px", backgroundColor: "blue"}}>
-            <button onClick={() => click(0)} style={{marginRight: "20px"}}>Home</button>
-            <button onClick={() => click(1)} style={{marginRight: "20px"}}>Rooms</button>
-            <button onClick={() => click(2)} style={{marginRight: "20px"}}>Settings</button>
-            <button onClick={() => click(3)}>Export</button>
-          </div> 
-        </div>
-
-        <div style={{backgroundColor: "green",width: "100%"}}>
-         
-        </div>
-        
-        {root == 0 && <Home/>}
-        {root == 1 && <Rooms/>}
-        {root == 2 && <Settings/>}
-        {root == 3 && <Export/>}
-      </header>
+      {route == 0 && <Home />}
+      {route == 1 && <Rooms />}
+      {route == 2 && <Settings />}
+      {route == 3 && <Export />}
+    </div>
     </div>
   );
 }
