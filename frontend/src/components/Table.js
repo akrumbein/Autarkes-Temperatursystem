@@ -12,19 +12,18 @@ const Table = ({ title, values }) => {
         justifyItems: "center",
       }}
     >
-      <h3 style={{width:150}}>{title}</h3>
+      <h3 style={{ width: 540, display: "flex" }}>{title}</h3>
       <div
         style={{
           paddingLeft: 20,
+          marginRight: 20,
           display: "flex",
-          justifyContent: "space-around",
+          justifyContent: "flex-end",
           width: "100%",
           gap: 20,
         }}
       >
-        {values.map((ele) => (
-          <h5>{ele}</h5>
-        ))}
+        {values}
       </div>
     </div>
   );
