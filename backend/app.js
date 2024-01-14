@@ -29,11 +29,60 @@ open({
       });
     });
 
+    app.get("/addRoom", async (req, res) => {
+      if (!req.query.name) {
+        res.send("Please provide a name!");
+        return;
+      }
+      const name = req.query.name;
+
+      const findDublicateRoom = await db.get(
+        `SELECT * FROM ROOMS WHERE name like "${name}"`
+      );
+
+      if (findDublicateRoom) {
+        res.send({ error: "Raum name wurde bereits gefunden!" });
+        return;
+      }
+
+      await db.exec(`INSERT INTO ROOMS (name) VALUES("${name}")`);
+
+      const allrooms = await db.all("SELECT name FROM ROOMS");
+
+      if (allrooms.length == 1) {
+        await db.exec(
+          `INSERT INTO CONFIGURATION (key, value, type, unit) VALUES("currentActiveRoom","${name}", "TEXT", "Aktuell aktiver Raum")`
+        );
+      }
+
+      const currentActiveRoom = await db.get(
+        "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
+      );
+      res.send({
+        rooms: allrooms,
+        currentActiveRoom: currentActiveRoom?.value,
+      });
+    });
+
     app.get("/getCurrentActive", async (req, res) => {
       const currentActiveRoom = await db.get(
         "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
       );
       res.send({ currentActiveRoom: currentActiveRoom?.value });
+    });
+
+    app.get("/setCurrentActive", async (req, res) => {
+      if (!req.query.roomName) {
+        res.send("Please provide a roomName!");
+        return;
+      }
+      const roomName = req.query.roomName;
+
+      await db.exec(
+        `UPDATE CONFIGURATION SET value = "${roomName}" Where key like 'currentActiveRoom'`
+      );
+
+      res.send({ currentActiveRoom: roomName });
     });
 
     app.get("/getRoomInfo", async (req, res) => {
@@ -72,6 +121,22 @@ open({
         )
       );
       res.send({ room });
+    });
+
+    app.get("/getMeasurements", async (req, res) => {
+      if (!req.query.roomName) {
+        res.send("Please provide a roomName!");
+        return;
+      }
+      const roomName = req.query.roomName;
+
+      const allMeasurements = await db.all(
+        `SELECT * FROM MEASUREMENTS WHERE roomName like "${roomName}" ORDER BY timestamp DESC LIMIT 5`
+      );
+
+      res.send({
+        measurements: allMeasurements,
+      });
     });
 
     app.get("/getConfigurations", async (req, res) => {

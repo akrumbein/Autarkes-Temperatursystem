@@ -20,8 +20,8 @@ const InitializeDB = async (db) => {
     `CREATE TABLE IF NOT EXISTS MEASUREMENTS 
         (
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          value NUMERIC,
-          type TEXT,
+          temp NUMERIC,
+          carbon INTEGER,
           timestamp DATETIME,
           roomName Text
           )`

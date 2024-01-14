@@ -34,6 +34,18 @@ const readSensorData = (db) => {
     });
   } catch (error) {
     console.log(error);
+    setInterval(async () => {
+      const currentActiveRoom = await db.get(
+        "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
+      );
+      if (!currentActiveRoom?.value) return;
+
+      await db.get(
+        `INSERT INTO MEASUREMENTS(temp, carbon, timestamp, roomName) VALUES(${22}, 1700, ${Date.now()},"${
+          currentActiveRoom.value
+        }")`
+      );
+    }, 1000);
   }
 };
 

@@ -46,9 +46,7 @@ function Settings() {
                 borderRadius: 5,
               }}
               type={
-                ele.type == "FLOAT" || ele.type == "INTEGER"
-                  ? "number"
-                  : "password"
+                ele.type == "FLOAT" || ele.type == "INTEGER" ? "number" : "text"
               }
               onChange={(e) => {
                 setChangedSettings((old) => [
