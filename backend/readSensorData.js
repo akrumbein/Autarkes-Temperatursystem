@@ -86,10 +86,11 @@ const readSensorData = (db) => {
       const measurement = await db.get(
         `SELECT * FROM MEASUREMENTS WHERE roomName like "${currentActiveRoom.value}" ORDER BY timestamp`
       );
-      console.log(measurement.temp);
-      ledDisplay.writeSync(measurement.temp);
-      a0Display.writeSync(measurement.temp);
-      sda.writeSync(measurement.temp);
+      const random = Math.random()
+      console.log(random);
+      ledDisplay.writeSync(random);
+      a0Display.writeSync(random);
+      sda.writeSync(random);
     }, 1000)
 
     function blinkLED() {
