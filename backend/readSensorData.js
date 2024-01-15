@@ -11,17 +11,21 @@ const readSensorData = (db) => {
       }
       console.log("Monitor connected.");
 
+      setInterval(()=>{
+        monitor.once("temp", "temp", (temperature) => {
+          console.log(`temp: ${temperature}`);
+        })
+      }, 1000)
+      
       // Read data from CO2 monitor.
-      monitor.transfer();
+      //monitor.transfer();
     });
 
     // Get results.
-    monitor.on("temp", (temperature) => {
-      console.log(`temp: ${temperature}`);
-    });
+    /*monitor.on();
     monitor.on("co2", (co2) => {
       console.log(`co2: ${co2}`);
-    });
+    });*/
 
     // Error handler
     monitor.on("error", (err) => {
