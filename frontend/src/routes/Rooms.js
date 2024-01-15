@@ -19,38 +19,9 @@ const TimeParser = (timestamp) => {
   }.${year}`;
 };
 
-function Rooms() {
-  const [availableRooms, setAvailableRooms] = useState([]);
-  const [currentActiveRoom, setCurrentActiveRoom] = useState("");
+function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoosenRoom, choosenRoom, measurements}) {
   const [tryToCreateRoom, setTryToCreateRoom] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
-
-  const [choosenRoom, setChoosenRoom] = useState("");
-  const [measurements, setMeasurements] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:6969/getAvailableRooms")
-      .then((response) => response.json())
-      .then((response) => {
-        setAvailableRooms(response.rooms.map((ele) => ele.name));
-        setCurrentActiveRoom(response.currentActiveRoom);
-        setChoosenRoom(response.currentActiveRoom);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (!choosenRoom) return;
-    fetch(`http://localhost:6969/getMeasurements?roomName=${choosenRoom}`)
-      .then((response) => response.json())
-      .then((response) => setMeasurements(response.measurements));
-
-    const interval = setInterval(() => {
-      fetch(`http://localhost:6969/getMeasurements?roomName=${choosenRoom}`)
-        .then((response) => response.json())
-        .then((response) => setMeasurements(response.measurements));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [choosenRoom]);
 
   const createNewRoom = () => {
     if (!tryToCreateRoom) {
@@ -70,34 +41,8 @@ function Rooms() {
       });
   };
 
-  const setActiveRoom = () => {
-    fetch(`http://localhost:6969/setCurrentActive?roomName=${choosenRoom}`)
-      .then((response) => response.json())
-      .then((response) => {
-        setCurrentActiveRoom(response.currentActiveRoom);
-      });
-  };
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      {availableRooms.length == 0 ? (
-        <h1>Es existieren noch keine Räume bitte erstellen sie einen!</h1>
-      ) : (
-        <div style={{ display: "flex", gap: 10 }}>
-          <RoomsSelection
-            choosenRoom={choosenRoom}
-            setChoosenRoom={setChoosenRoom}
-            availableRooms={availableRooms}
-            currentActiveRoom={currentActiveRoom}
-          />
-          {choosenRoom != currentActiveRoom && (
-            <HeaderButtons
-              label={"Als aktiven Raum setzen"}
-              onClick={setActiveRoom}
-            />
-          )}
-        </div>
-      )}
       {choosenRoom && (
         <>
           <div style={{ display: "flex", justifyContent: "space-between" }}>

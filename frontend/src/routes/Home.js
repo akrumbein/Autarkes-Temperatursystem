@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "../components/Table";
 
 function Home() {
-  const [selectedRoom, setSelectedRoom] = useState(null);
+const [selectedRoom, setSelectedRoom] = useState(null);
   const [availableRooms, setAvailableRoom] = useState([]);
   const [currentActiveRoom, setCurrentActiveRoom] = useState("54");
 
@@ -29,26 +29,6 @@ function Home() {
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {selectedRoom && (
         <>
-          <div style={{ fontSize: 17, fontWeight: 500, color: "white" }}>
-            <>Raum: </>
-            <select
-              onChange={(e) => {}}
-              style={{
-                width: "fit-content",
-                fontSize: 17,
-                fontWeight: 500,
-                marginLeft: 10,
-                padding: 5,
-                borderRadius: 10,
-              }}
-            >
-              {availableRooms.map((ele) => (
-                <option value={ele} key={ele}>
-                  {ele} {ele == currentActiveRoom && "(aktiv)"}
-                </option>
-              ))}
-            </select>
-          </div>
           <Table
             title={"Temperatur"}
             values={[
