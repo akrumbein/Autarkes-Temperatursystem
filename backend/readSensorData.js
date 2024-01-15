@@ -1,5 +1,6 @@
 import CO2Monitor from "node-co2-monitor";
 import Gpio from "onoff";
+import readline from "readline"
 
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
@@ -76,6 +77,10 @@ const readSensorData = (db) => {
     const a0Display = new test(23, "out")
     const resetDisplay = new test(24, "out")
 
+    readline.createInterface({
+      input: process.stdin,
+output: process.stdout
+    })
     blinkLED()
 
     setInterval( async()=>{
@@ -86,11 +91,19 @@ const readSensorData = (db) => {
       const measurement = await db.get(
         `SELECT * FROM MEASUREMENTS WHERE roomName like "${currentActiveRoom.value}" ORDER BY timestamp`
       );
-      const random = Math.random()
-      console.log(random);
-      ledDisplay.writeSync(1);
-      a0Display.writeSync(random);
-      sda.writeSync(random);
+
+
+      readline.question('LED?', name => {
+        ledDisplay.writeSync(name);
+      });
+
+      readline.question('AO?', name => {
+        a0Display.writeSync(name);
+      });
+
+      readline.question('sda?', name => {
+        sda.writeSync(name);
+      });
     }, 1000)
 
     function blinkLED() {
