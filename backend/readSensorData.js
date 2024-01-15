@@ -86,8 +86,9 @@ const readSensorData = (db) => {
       const measurement = await db.get(
         `SELECT * FROM MEASUREMENTS WHERE roomName like "${currentActiveRoom.value}" ORDER BY timestamp`
       );
-      ledDisplay.writeSync(1);
-      a0Display.writeSync(1);
+      console.log(measurement.temp);
+      ledDisplay.writeSync(measurement.temp);
+      a0Display.writeSync(measurement.temp);
       sda.writeSync(measurement.temp);
     }, 1000)
 
