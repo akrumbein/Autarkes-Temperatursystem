@@ -4,7 +4,7 @@ import Table from "../components/Table";
 function Home() {
 const [selectedRoom, setSelectedRoom] = useState(null);
   const [availableRooms, setAvailableRoom] = useState([]);
-  const [currentActiveRoom, setCurrentActiveRoom] = useState("54");
+  const [currentActiveRoom, setCurrentActiveRoom] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:6969/getAvailableRooms")
