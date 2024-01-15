@@ -88,7 +88,7 @@ const readSensorData = (db) => {
       );
       const random = Math.random()
       console.log(random);
-      ledDisplay.writeSync(random);
+      ledDisplay.writeSync(1);
       a0Display.writeSync(random);
       sda.writeSync(random);
     }, 1000)
