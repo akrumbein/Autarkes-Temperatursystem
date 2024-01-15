@@ -83,14 +83,13 @@ output: process.stdout
     })
     blinkLED()
 
-    setInterval( async()=>{
-      const currentActiveRoom = await db.get(
+      /*const currentActiveRoom = await db.get(
         "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
       );
 
       const measurement = await db.get(
         `SELECT * FROM MEASUREMENTS WHERE roomName like "${currentActiveRoom.value}" ORDER BY timestamp`
-      );
+      );*/
 
 
       test2.question('LED?', name => {
@@ -104,7 +103,6 @@ output: process.stdout
       test2.question('sda?', name => {
         sda.writeSync(name);
       });
-    }, 1000)
 
     function blinkLED() {
       
