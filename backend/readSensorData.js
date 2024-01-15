@@ -11,22 +11,30 @@ const readSensorData = (db) => {
       }
       console.log("Monitor connected.");
 
-      setInterval(()=>{
+      const interval = setInterval(async ()=>{
+        const currentInterval = await db.get(
+          "SELECT value from CONFIGURATION Where key like 'measureInterval'"
+        );
+        if(parseFloat(currentInterval.value)){
+          interval._repeat = currentInterval.value* 60000
+        }
         if(monitor.temperature && monitor.co2){
-          console.log(`temp: ${monitor.temperature}`);
-          console.log(`co2: ${monitor.co2}`);
+          const currentActiveRoom = await db.get(
+            "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
+          );
+          if (!currentActiveRoom?.value) return;
+    
+          await db.get(
+            `INSERT INTO MEASUREMENTS(temp, carbon, timestamp, roomName) VALUES(${monitor.temperature}, ${monitor.co2}, ${Date.now()},"${
+              currentActiveRoom.value
+            }")`
+          );
         }
       }, 1000)
       
       // Read data from CO2 monitor.
       monitor.transfer();
     });
-
-    // Get results.
-    /*monitor.on();
-    monitor.on("co2", (co2) => {
-      console.log(`co2: ${co2}`);
-    });*/
 
     // Error handler
     monitor.on("error", (err) => {
@@ -39,7 +47,14 @@ const readSensorData = (db) => {
     });
   } catch (error) {
     console.log(error);
-    setInterval(async () => {
+    const interval = setInterval(async () => {
+      const currentInterval = await db.get(
+        "SELECT value from CONFIGURATION Where key like 'measureInterval'"
+      );
+      if(parseFloat(currentInterval.value)){
+        interval._repeat = currentInterval.value * 60000
+      }
+
       const currentActiveRoom = await db.get(
         "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
       );
