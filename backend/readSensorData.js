@@ -77,7 +77,7 @@ const readSensorData = (db) => {
     const a0Display = new test(23, "out")
     const resetDisplay = new test(24, "out")
 
-    readline.createInterface({
+    const test2 = readline.createInterface({
       input: process.stdin,
 output: process.stdout
     })
@@ -93,15 +93,15 @@ output: process.stdout
       );
 
 
-      readline.question('LED?', name => {
+      test2.question('LED?', name => {
         ledDisplay.writeSync(name);
       });
 
-      readline.question('AO?', name => {
+      test2.question('AO?', name => {
         a0Display.writeSync(name);
       });
 
-      readline.question('sda?', name => {
+      test2.question('sda?', name => {
         sda.writeSync(name);
       });
     }, 1000)
