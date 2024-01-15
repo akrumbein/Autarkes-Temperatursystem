@@ -1,4 +1,5 @@
 import CO2Monitor from "node-co2-monitor";
+import Gpio from "onoff";
 
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
@@ -11,27 +12,26 @@ const readSensorData = (db) => {
       }
       console.log("Monitor connected.");
 
-      const interval = setInterval(async ()=>{
+      const interval = setInterval(async () => {
         const currentInterval = await db.get(
           "SELECT value from CONFIGURATION Where key like 'measureInterval'"
         );
-        if(parseFloat(currentInterval.value)){
-          interval._repeat = currentInterval.value* 60000
+        if (parseFloat(currentInterval.value)) {
+          interval._repeat = currentInterval.value * 60000;
         }
-        if(monitor.temperature && monitor.co2){
+        if (monitor.temperature && monitor.co2) {
           const currentActiveRoom = await db.get(
             "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
           );
           if (!currentActiveRoom?.value) return;
-    
+
           await db.get(
-            `INSERT INTO MEASUREMENTS(temp, carbon, timestamp, roomName) VALUES(${monitor.temperature}, ${monitor.co2}, ${Date.now()},"${
-              currentActiveRoom.value
-            }")`
+            `INSERT INTO MEASUREMENTS(temp, carbon, timestamp, roomName) VALUES(${
+              monitor.temperature
+            }, ${monitor.co2}, ${Date.now()},"${currentActiveRoom.value}")`
           );
         }
-      }, 1000)
-      
+      }, 1000);
       // Read data from CO2 monitor.
       monitor.transfer();
     });
@@ -51,8 +51,8 @@ const readSensorData = (db) => {
       const currentInterval = await db.get(
         "SELECT value from CONFIGURATION Where key like 'measureInterval'"
       );
-      if(parseFloat(currentInterval.value)){
-        interval._repeat = currentInterval.value * 60000
+      if (parseFloat(currentInterval.value)) {
+        interval._repeat = currentInterval.value * 60000;
       }
 
       const currentActiveRoom = await db.get(
@@ -66,6 +66,33 @@ const readSensorData = (db) => {
         }")`
       );
     }, 1000);
+  }
+
+  try {
+    const test = Gpio.Gpio;
+
+    const sda = new test(10, "out");
+    const ledDisplay = new test(18, "out")
+    const a0Display = new test(23, "out")
+    const resetDisplay = new test(24, "out")
+
+    blinkLED()
+
+    function blinkLED() {
+      ledDisplay.writeSync(1);
+      a0Display.writeSync(1);
+      sda.writeSync(1);
+
+      //function to start blinking
+      //if (LED.readSync() === 0) {
+        //check the pin state, if the state is 0 (or off)
+      //  LED.writeSync(1); //set pin state to 1 (turn LED on)
+      //} else {
+      //  LED.writeSync(0); //set pin state to 0 (turn LED off)
+      //}
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 
