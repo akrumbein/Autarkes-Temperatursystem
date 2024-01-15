@@ -79,8 +79,12 @@ const readSensorData = (db) => {
     blinkLED()
 
     setInterval( async()=>{
+      const currentActiveRoom = await db.get(
+        "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
+      );
+
       const measurement = await db.get(
-        `SELECT * FROM MEASUREMENTS WHERE roomName like "${roomName}" ORDER BY timestamp`
+        `SELECT * FROM MEASUREMENTS WHERE roomName like "${currentActiveRoom.value}" ORDER BY timestamp`
       );
       ledDisplay.writeSync(1);
       a0Display.writeSync(1);
