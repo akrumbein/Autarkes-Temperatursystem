@@ -12,9 +12,7 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       setInterval(()=>{
-        monitor.once("temp", "temp", (temperature) => {
-          console.log(`temp: ${temperature}`);
-        })
+        console.log(`temp: ${monitor.temperature}`);
       }, 1000)
       
       // Read data from CO2 monitor.
