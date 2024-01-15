@@ -93,15 +93,15 @@ output: process.stdout
 
 
       test2.question('LED?', name => {
-        ledDisplay.writeSync(name);
+        ledDisplay.writeSync(parseInt(name));
       });
 
       test2.question('AO?', name => {
-        a0Display.writeSync(name);
+        a0Display.writeSync(parseInt(name));
       });
 
       test2.question('sda?', name => {
-        sda.writeSync(name);
+        sda.writeSync(parseInt(name));
       });
 
     function blinkLED() {
