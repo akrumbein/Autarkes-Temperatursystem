@@ -43,21 +43,6 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      {choosenRoom && (
-        <>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h1>Gemessene Werte</h1>
-            <h1>test</h1>
-          </div>
-          {measurements.map((ele) => (
-            <Table
-              key={ele.timestamp}
-              title={TimeParser(ele.timestamp)}
-              values={[ele.carbon + " ppm", <div>{ele.temp}℃</div>]}
-            />
-          ))}
-        </>
-      )}
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
         {tryToCreateRoom && (
           <input
@@ -73,6 +58,21 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
           onClick={createNewRoom}
         />
       </div>
+      {choosenRoom && (
+        <>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <h1>Gemessene Werte</h1>
+            <h1>test</h1>
+          </div>
+          {measurements.map((ele) => (
+            <Table
+              key={ele.timestamp}
+              title={TimeParser(ele.timestamp)}
+              values={[ele.carbon + " ppm", <div>{ele.temp}℃</div>]}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 }
