@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import HeaderButtons from "../components/HeaderButtons";
-import RoomsSelection from "../components/RoomsSelection";
 import Table from "../components/Table";
 
 const TimeParser = (timestamp) => {
@@ -31,7 +30,7 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
     if (!newRoomName || availableRooms.find((ele) => ele == newRoomName))
       return;
 
-    fetch(`http://localhost:6969/addRoom?name=${newRoomName}`)
+    fetch(`http://${window.location.host.split(":")[0]}:6969/addRoom?name=${newRoomName}`)
       .then((response) => response.json())
       .then((response) => {
         setAvailableRooms(response.rooms.map((ele) => ele.name));

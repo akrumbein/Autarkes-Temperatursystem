@@ -15,7 +15,7 @@ function App() {
   const [measurements, setMeasurements] = useState([]);
 
   const setActiveRoom = () => {
-    fetch(`http://localhost:6969/setCurrentActive?roomName=${choosenRoom}`)
+    fetch(`http://${window.location.host.split(":")[0]}:6969/setCurrentActive?roomName=${choosenRoom}`)
       .then((response) => response.json())
       .then((response) => {
         setCurrentActiveRoom(response.currentActiveRoom);
@@ -23,7 +23,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:6969/getAvailableRooms")
+    fetch(`http://${window.location.host.split(":")[0]}:6969/getAvailableRooms`)
       .then((response) => response.json())
       .then((response) => {
         setAvailableRooms(response.rooms.map((ele) => ele.name));
@@ -34,12 +34,12 @@ function App() {
 
   useEffect(() => {
     if (!choosenRoom) return;
-    fetch(`http://localhost:6969/getMeasurements?roomName=${choosenRoom}`)
+    fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
       .then((response) => response.json())
       .then((response) => setMeasurements(response.measurements));
 
     const interval = setInterval(() => {
-      fetch(`http://localhost:6969/getMeasurements?roomName=${choosenRoom}`)
+      fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
         .then((response) => response.json())
         .then((response) => setMeasurements(response.measurements));
     }, 1000);
