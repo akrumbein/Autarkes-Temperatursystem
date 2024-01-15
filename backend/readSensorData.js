@@ -60,7 +60,7 @@ const readSensorData = (db) => {
       );
       if (!currentActiveRoom?.value) return;
 
-      await db.get(
+      await db.exec(
         `INSERT INTO MEASUREMENTS(temp, carbon, timestamp, roomName) VALUES(${22}, 1700, ${Date.now()},"${
           currentActiveRoom.value
         }")`
@@ -78,10 +78,17 @@ const readSensorData = (db) => {
 
     blinkLED()
 
-    function blinkLED() {
+    setInterval( async()=>{
+      const measurement = await db.get(
+        `SELECT * FROM MEASUREMENTS WHERE roomName like "${roomName}" ORDER BY timestamp`
+      );
       ledDisplay.writeSync(1);
       a0Display.writeSync(1);
-      sda.writeSync(1);
+      sda.writeSync(measurement.temp);
+    }, 1000)
+
+    function blinkLED() {
+      
 
       //function to start blinking
       //if (LED.readSync() === 0) {
