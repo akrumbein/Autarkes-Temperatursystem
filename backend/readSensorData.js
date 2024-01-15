@@ -16,7 +16,7 @@ const readSensorData = (db) => {
       }, 1000)
       
       // Read data from CO2 monitor.
-      //monitor.transfer();
+      monitor.transfer();
     });
 
     // Get results.
