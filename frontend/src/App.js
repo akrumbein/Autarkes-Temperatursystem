@@ -15,6 +15,8 @@ function App() {
   const [currentActiveRoom, setCurrentActiveRoom] = useState("");
   const [password, setPassword] = useState("");
 
+  console.log(password);
+
   const setActiveRoom = () => {
     fetch(
       `http://${
@@ -55,7 +57,11 @@ function App() {
   return (
     <div style={{ backgroundColor: "#98a4ab", width: "100%", height: "100%" }}>
       {!token ? (
+      <div style={{display: "flex", flexDirection: "row", gap: 10, fontSize: 42}}>
+        <label for="userPassword">Password: </label>
+        <input id="userPassword" type="password" onChange={e => setPassword(e.target.value)} />
         <button onClick={getToken}>send</button>
+      </div>
       ) : (
         <div
           style={{
