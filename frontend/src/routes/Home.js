@@ -1,9 +1,9 @@
 import Table from "../components/Table";
 
 function Home({currentActiveRoom, roomInfo}) {
-  console.log(roomInfo.measurements.measurementLast);
+  console.log(roomInfo?.measurements?.measurementLast);
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      roomInfo && <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {currentActiveRoom && roomInfo && (
         <>
           <Table
@@ -29,6 +29,7 @@ function Home({currentActiveRoom, roomInfo}) {
         </>
       )}
     </div>
+    
   );
 }
 
