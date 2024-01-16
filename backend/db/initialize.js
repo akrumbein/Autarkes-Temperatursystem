@@ -48,7 +48,7 @@ const InitializeDB = async (db) => {
 
   db.exec(
     `INSERT INTO Configuration (key, value, type, unit)
-        SELECT "measureInterval", "1000", "FLOAT", "Speicher-Intervall in Minuten"
+        SELECT "measureInterval", "30", "FLOAT", "Speicher-Intervall in Minuten"
         WHERE NOT EXISTS (
           SELECT 1 
           FROM Configuration 

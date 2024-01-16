@@ -6,7 +6,7 @@ function Settings() {
   const [changedSettings, setChangedSettings] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:6969/getConfigurations")
+    fetch(`http://${window.location.host.split(":")[0]}:6969/getConfigurations`)
       .then((response) => response.json())
       .then((response) => setSettings(response.config));
   }, []);
@@ -18,7 +18,7 @@ function Settings() {
     )
       return;
     fetch(
-      `http://localhost:6969/saveConfig?key=${key}&value=${
+      `http://${window.location.host.split(":")[0]}:6969/saveConfig?key=${key}&value=${
         changedSettings.find((ele) => ele.key == key).value
       }`
     )
