@@ -243,6 +243,7 @@ function App() {
                 token={token}
                 startDate={startDate}
                 endDate={endDate}
+                roomInfo={roomInfo}
               />
             )}
             {route == 1 && (
