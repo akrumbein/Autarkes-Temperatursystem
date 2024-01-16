@@ -8,12 +8,6 @@ import HeaderButtons from "./components/HeaderButtons";
 import RoomsSelection from "./components/RoomsSelection";
 
 function App() {
-  const [measurementLast, setMeasurementLast] = useState(null);
-  const [maxTemp, setMaxTemp] = useState(null);
-  const [minTemp, setMinTemp] = useState(null);
-  const [maxCarbon, setMaxCarbon] = useState(null);
-  const [minCarbon, setMinCarbon] = useState(null);
-
   const [token, setToken] = useState(null);
   const [route, setRoute] = useState(0);
   const [choosenRoom, setChoosenRoom] = useState("");
@@ -83,11 +77,6 @@ function App() {
           return;
         }
         setRoomInfo(response);
-        setMeasurementLast(response.measurements.measurementsLast);
-        setMaxTemp(response.measurements.maxTemp);
-        setMinTemp(response.measurements.minTemp);
-        setMinCarbon(response.measurements.minCarbon);
-        setMaxCarbon(response.measurements.maxCarbon);
       });
   }, [choosenRoom, startDate, endDate, token, currentActiveRoom]);
 
@@ -254,11 +243,7 @@ function App() {
                 token={token}
                 startDate={startDate}
                 endDate={endDate}
-                measurementLast={measurementLast}
-              maxTemp={maxTemp}
-              minTemp={minTemp}
-              maxCarbon={maxCarbon}
-              minCarbon={minCarbon}
+                roomInfo={roomInfo}
               />
             )}
             {route == 1 && (

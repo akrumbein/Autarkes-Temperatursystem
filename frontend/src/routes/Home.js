@@ -1,19 +1,20 @@
 import Table from "../components/Table";
 
-function Home({currentActiveRoom, measurementLast, maxTemp, minTemp, maxCarbon, minCarbon}) {
+function Home({currentActiveRoom, roomInfo}) {
+  console.log(roomInfo.measurements.measurementLast);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      {currentActiveRoom && (
+      {currentActiveRoom && roomInfo && (
         <>
           <Table
             title={"Temperatur"}
             values={[
-              <h5>"current Temperatur ℃" {measurementLast}</h5>,
+              <h5>"current Temperatur ℃" </h5>,
               <h5>
-                {"min: " + minTemp.toFixed(1).toString().replaceAll(".", ",") + "℃"}
+                {"min: " + roomInfo.measurements.minTemp.toFixed(1).toString().replaceAll(".", ",") + "℃"}
               </h5>,
               <h5>
-                {"max: " + maxTemp.toFixed(1).toString().replaceAll(".", ",") + "℃"}
+                {"max: " + roomInfo.measurements.maxTemp.toFixed(1).toString().replaceAll(".", ",") + "℃"}
               </h5>,
             ]}
           />
@@ -27,7 +28,6 @@ function Home({currentActiveRoom, measurementLast, maxTemp, minTemp, maxCarbon, 
           />
         </>
       )}
-      <div>{currentActiveRoom}</div>
     </div>
   );
 }
