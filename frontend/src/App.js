@@ -76,162 +76,193 @@ function App() {
           console.log(response.message);
           return;
         }
-        console.log(response);
         setRoomInfo(response);
       });
   }, [choosenRoom, startDate, endDate, token, currentActiveRoom]);
 
   return (
     <div style={{ backgroundColor: "#98a4ab", width: "100%", height: "100%" }}>
-      {!token ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 10,
-            fontSize: 42,
-          }}
-        >
-          <label>Password: </label>
-          <input
-            id="userPassword"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={getToken}>send</button>
-        </div>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            paddingTop: "5%",
-            paddingLeft: "5%",
-            flexDirection: "column",
-            gap: 20,
-            width: "90vw",
-            height: "100vw",
-          }}
-        >
+      <div
+        style={{
+          display: "flex",
+          paddingTop: "5%",
+          paddingLeft: "5%",
+          flexDirection: "column",
+          gap: 20,
+          width: "90vw",
+          height: "100vw",
+        }}
+      >
+        {!token ? (
           <div
             style={{
               display: "flex",
+              flexDirection: "row",
               gap: 10,
-              maxWidth: 500,
-              justifyContent: "space-between",
+              fontSize: 42,
             }}
           >
-            {["Home", "Räume", "Einstellung", "Export"].map((ele, number) => {
-              return (
-                <HeaderButtons label={ele} onClick={() => setRoute(number)} />
-              );
-            })}
+            <label
+              style={{
+                fontSize: 25,
+                fontWeight: 600,
+                color: "white",
+              }}
+            >
+              Password:{" "}
+            </label>
+            <input
+              id="userPassword"
+              type="password"
+              style={{
+                width: 100,
+                paddingLeft: 10,
+                borderRadius: 5,
+                fontSize: 25,
+                fontWeight: 600,
+              }}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <HeaderButtons onClick={getToken} label={"einloggen"}/>
           </div>
-          {route != 2 &&
-            (availableRooms.length == 0 ? (
-              <h1>Es existieren noch keine Räume bitte erstellen sie einen!</h1>
-            ) : (
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", gap: 10 }}>
-                  <RoomsSelection
-                    choosenRoom={choosenRoom}
-                    setChoosenRoom={setChoosenRoom}
-                    availableRooms={availableRooms}
-                    currentActiveRoom={currentActiveRoom}
-                  />
-                  {choosenRoom != currentActiveRoom && (
-                    <HeaderButtons
-                      label={"Als aktiven Raum setzen"}
-                      onClick={setActiveRoom}
+        ) : (
+          <>
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                maxWidth: 500,
+                justifyContent: "space-between",
+              }}
+            >
+              {["Home", "Räume", "Einstellung", "Export"].map((ele, number) => {
+                return (
+                  <HeaderButtons label={ele} onClick={() => setRoute(number)} />
+                );
+              })}
+            </div>
+            {route != 2 &&
+              (availableRooms.length == 0 ? (
+                <h1>
+                  Es existieren noch keine Räume bitte erstellen sie einen!
+                </h1>
+              ) : (
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <RoomsSelection
+                      choosenRoom={choosenRoom}
+                      setChoosenRoom={setChoosenRoom}
+                      availableRooms={availableRooms}
+                      currentActiveRoom={currentActiveRoom}
                     />
-                  )}
-                </div>
-                {roomInfo && roomInfo.measurements && roomInfo.measurements.firstDateOfValues && roomInfo.measurements.lastDateOfValues && (
-                  <div>
-                    <label
-                      style={{ fontSize: 17, fontWeight: 500, color: "white" }}
-                    >
-                      {"Zeitraum: "}
-                    </label>
-                    <input
-                      type="date"
-                      id="start"
-                      name="trip-start"
-                      min={
-                        new Date(roomInfo.measurements.firstDateOfValues)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                      max={
-                        new Date(roomInfo.measurements.lastDateOfValues)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                      value={startDate.toISOString().split("T")[0]}
-                      onChange={(e) =>
-                        setStartDate(
-                          new Date(
-                            new Date(e.target.value).setUTCHours(0, 0, 0)
-                          )
-                        )
-                      }
-                    />
-                    <label
-                      style={{ fontSize: 17, fontWeight: 500, color: "white" }}
-                    >
-                      {" bis "}
-                    </label>
-                    <input
-                      type="date"
-                      id="end"
-                      name="trip-end"
-                      min={
-                        new Date(roomInfo.measurements.firstDateOfValues)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                      max={
-                        new Date(roomInfo.measurements.lastDateOfValues)
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                      value={endDate.toISOString().split("T")[0]}
-                      onChange={(e) =>
-                        setEndDate(
-                          new Date(
-                            new Date(e.target.value).setUTCHours(23, 59, 59)
-                          )
-                        )
-                      }
-                    />
+                    {choosenRoom != currentActiveRoom && (
+                      <HeaderButtons
+                        label={"Als aktiven Raum setzen"}
+                        onClick={setActiveRoom}
+                      />
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
-          {route == 0 && (
-            <Home
-              currentActiveRoom={currentActiveRoom}
-              token={token}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          )}
-          {route == 1 && (
-            <Rooms
-              availableRooms={availableRooms}
-              setAvailableRooms={setAvailableRooms}
-              setCurrentActiveRoom={setCurrentActiveRoom}
-              setChoosenRoom={setChoosenRoom}
-              choosenRoom={choosenRoom}
-              currentActiveRoom={currentActiveRoom}
-              startDate={startDate}
-              endDate={endDate}
-              token={token}
-            />
-          )}
-          {route == 2 && <Settings token={token} />}
-          {route == 3 && <Export />}
-        </div>
-      )}
+                  {roomInfo &&
+                    roomInfo.measurements &&
+                    roomInfo.measurements.firstDateOfValues &&
+                    roomInfo.measurements.lastDateOfValues && (
+                      <div>
+                        <label
+                          style={{
+                            fontSize: 17,
+                            fontWeight: 500,
+                            color: "white",
+                          }}
+                        >
+                          {"Zeitraum: "}
+                        </label>
+                        <input
+                          type="date"
+                          id="start"
+                          name="trip-start"
+                          min={
+                            new Date(roomInfo.measurements.firstDateOfValues)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                          max={
+                            new Date(roomInfo.measurements.lastDateOfValues)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                          value={startDate.toISOString().split("T")[0]}
+                          onChange={(e) =>
+                            setStartDate(
+                              new Date(
+                                new Date(e.target.value).setUTCHours(0, 0, 0)
+                              )
+                            )
+                          }
+                        />
+                        <label
+                          style={{
+                            fontSize: 17,
+                            fontWeight: 500,
+                            color: "white",
+                          }}
+                        >
+                          {" bis "}
+                        </label>
+                        <input
+                          type="date"
+                          id="end"
+                          name="trip-end"
+                          min={
+                            new Date(roomInfo.measurements.firstDateOfValues)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                          max={
+                            new Date(roomInfo.measurements.lastDateOfValues)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                          value={endDate.toISOString().split("T")[0]}
+                          onChange={(e) =>
+                            setEndDate(
+                              new Date(
+                                new Date(e.target.value).setUTCHours(23, 59, 59)
+                              )
+                            )
+                          }
+                        />
+                      </div>
+                    )}
+                </div>
+              ))}
+            {route == 0 && (
+              <Home
+                currentActiveRoom={currentActiveRoom}
+                token={token}
+                startDate={startDate}
+                endDate={endDate}
+              />
+            )}
+            {route == 1 && (
+              <Rooms
+                availableRooms={availableRooms}
+                setAvailableRooms={setAvailableRooms}
+                setCurrentActiveRoom={setCurrentActiveRoom}
+                setChoosenRoom={setChoosenRoom}
+                choosenRoom={choosenRoom}
+                currentActiveRoom={currentActiveRoom}
+                startDate={startDate}
+                endDate={endDate}
+                token={token}
+              />
+            )}
+            {route == 2 && <Settings token={token} />}
+            {route == 3 && <Export />}
+          </>
+        )}
+      </div>
     </div>
   );
 }
