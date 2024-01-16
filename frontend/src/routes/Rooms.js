@@ -32,6 +32,8 @@ function Rooms({
   const [measurements, setMeasurements] = useState([]);
   const [tryToCreateRoom, setTryToCreateRoom] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
+  const [maxPage, setMaxPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const createNewRoom = () => {
     if (!tryToCreateRoom) {
@@ -59,12 +61,16 @@ function Rooms({
       });
   };
 
+  useEffect(()=>{
+    setCurrentPage(1)
+  }, [choosenRoom, currentActiveRoom])
+
   useEffect(() => {
     if (!choosenRoom) return;
     fetch(
       `http://${
         window.location.host.split(":")[0]
-      }:6969/getMeasurements?roomName=${choosenRoom}&token=${token}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}`
+      }:6969/getMeasurements?roomName=${choosenRoom}&token=${token}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}&page=${currentPage}`
     )
       .then((response) => response.json())
       .then((response) => {
@@ -73,13 +79,14 @@ function Rooms({
           return;
         }
         setMeasurements(response.measurements);
+        setMaxPage(response.pages)
       });
 
     const interval = setInterval(() => {
       fetch(
         `http://${
           window.location.host.split(":")[0]
-        }:6969/getMeasurements?roomName=${choosenRoom}&token=${token}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}`
+        }:6969/getMeasurements?roomName=${choosenRoom}&token=${token}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}&page=${currentPage}`
       )
         .then((response) => response.json())
         .then((response) => {
@@ -88,10 +95,11 @@ function Rooms({
             return;
           }
           setMeasurements(response.measurements);
+          setMaxPage(response.pages)
         });
     }, 60000);
     return () => clearInterval(interval);
-  }, [choosenRoom, currentActiveRoom, startDate, endDate]);
+  }, [choosenRoom, currentActiveRoom, startDate, endDate, currentPage]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -121,6 +129,11 @@ function Rooms({
             values={[ele.carbon + " ppm", <div>{ele.temp}℃</div>]}
           />
         ))}
+        <div>
+          <button onClick={()=>setCurrentPage(old => old - 1)}>links</button>
+          <label>{currentPage}</label>
+          <button onClick={()=>setCurrentPage(old => old + 1)}>rechts</button>
+        </div>
     </div>
   );
 }

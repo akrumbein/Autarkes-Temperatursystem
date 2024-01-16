@@ -234,10 +234,15 @@ open({
         return;
       }
       if (!req.query.roomName) {
-        res.send("Please provide a roomName!");
+        res.send({message:"Please provide a roomName!"});
         return;
       }
       const roomName = req.query.roomName;
+
+      if (!req.query.page) {
+        res.send({message:"Please provide a page!"});
+        return;
+      }
 
       if (!req.query.startDate) {
         res.send({
@@ -254,11 +259,16 @@ open({
       }
 
       const allMeasurements = await db.all(
-        `SELECT * FROM MEASUREMENTS WHERE ${req.query.startDate} < timestamp AND ${req.query.endDate} > timestamp AND roomName like "${roomName}" ORDER BY timestamp DESC LIMIT 5`
+        `SELECT * FROM MEASUREMENTS WHERE ${req.query.startDate} < timestamp AND ${req.query.endDate} > timestamp AND roomName like "${roomName}" ORDER BY timestamp DESC LIMIT 5 OFFSET ${req.query.page*5}`
       );
+
+      const countMeasurements= await db.get(
+        `SELECT COUNT(*) as countMeasurements FROM MEASUREMENTS WHERE ${req.query.startDate} < timestamp AND ${req.query.endDate} > timestamp AND roomName like "${roomName}"`
+      )
 
       res.send({
         measurements: allMeasurements,
+        pages: parseInt(countMeasurements.countMeasurements/5) + 1
       });
     });
 
