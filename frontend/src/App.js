@@ -7,6 +7,13 @@ import Export from "./routes/Export";
 import HeaderButtons from "./components/HeaderButtons";
 import RoomsSelection from "./components/RoomsSelection";
 
+const dateParser = (date) => {
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
+  const yyyy = date.getFullYear();
+  return yyyy + "-" + mm + "-" + dd;
+};
+
 function App() {
   const [token, setToken] = useState(null);
   const [route, setRoute] = useState(0);
@@ -14,6 +21,8 @@ function App() {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [currentActiveRoom, setCurrentActiveRoom] = useState("");
   const [password, setPassword] = useState("");
+  const [startDate, setStartDate] = useState(new Date(Date.now()));
+  const [endDate, setEndDate] = useState(new Date(Date.now()));
 
   console.log(password);
 
@@ -45,7 +54,11 @@ function App() {
 
   useEffect(() => {
     if (!token) return;
-    fetch(`http://${window.location.host.split(":")[0]}:6969/getAvailableRooms&token=${token}`)
+    fetch(
+      `http://${
+        window.location.host.split(":")[0]
+      }:6969/getAvailableRooms&token=${token}`
+    )
       .then((response) => response.json())
       .then((response) => {
         setAvailableRooms(response.rooms.map((ele) => ele.name));
@@ -104,27 +117,47 @@ function App() {
                   onClick={setActiveRoom}
                 />
               )}
+              <label for="start">Start date:</label>
+              <input
+                type="date"
+                id="start"
+                name="trip-start"
+                value={dateParser(startDate)}
+                onChange={(e) => setStartDate(new Date(e.target.value))}
+              />
+              <label for="end">End date:</label>
+              <input
+                type="date"
+                id="end"
+                name="trip-end"
+                value={dateParser(endDate)}
+                onChange={(e) => setEndDate(new Date(e.target.value))}
+              />
             </div>
           )}
 
-        {route == 0 && <Home
-         currentActiveRoom={currentActiveRoom}
-         token={token}
-         />}
-        {route == 1 && (
-          <Rooms
-            availableRooms={availableRooms}
-            setAvailableRooms={setAvailableRooms}
-            setCurrentActiveRoom={setCurrentActiveRoom}
-            setChoosenRoom={setChoosenRoom}
-            choosenRoom={choosenRoom}
-            currentActiveRoom={currentActiveRoom}
-            token={token}
-          />
-        )}
-        {route == 2 && <Settings token={token}/>}
-        {route == 3 && <Export />}
-      </div>
+          {route == 0 && (
+            <Home
+              currentActiveRoom={currentActiveRoom}
+              token={token}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          )}
+          {route == 1 && (
+            <Rooms
+              availableRooms={availableRooms}
+              setAvailableRooms={setAvailableRooms}
+              setCurrentActiveRoom={setCurrentActiveRoom}
+              setChoosenRoom={setChoosenRoom}
+              choosenRoom={choosenRoom}
+              currentActiveRoom={currentActiveRoom}
+              token={token}
+            />
+          )}
+          {route == 2 && <Settings token={token} />}
+          {route == 3 && <Export />}
+        </div>
       )}
     </div>
   );
