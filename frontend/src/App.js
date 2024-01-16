@@ -92,7 +92,9 @@ function App() {
           </div>
         )}
 
-        {route == 0 && <Home />}
+        {route == 0 && <Home
+         currentActiveRoom={currentActiveRoom}
+         />}
         {route == 1 && (
           <Rooms
             availableRooms={availableRooms}

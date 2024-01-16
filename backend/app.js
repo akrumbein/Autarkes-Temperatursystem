@@ -18,6 +18,31 @@ open({
 
     readSensorData(db);
 
+    app.get("/getFilteredMeasurements", async (req, res) => {
+
+      if (!req.query.startDate) {
+        res.send({
+          message: "Please provide a end date!"
+        });
+        return;
+      }
+
+      if (!req.query.endDate) {
+        res.send({
+          message: "Please provide a end date!"
+        });
+        return;
+      }
+
+      const measurements = await db.all(
+        "SELECT * from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp"
+      );
+
+      res.send({
+        measurements: measurements,
+      });
+    });
+
     app.get("/getAvailableRooms", async (req, res) => {
       const allrooms = await db.all("SELECT name FROM ROOMS");
       const currentActiveRoom = await db.get(
@@ -87,21 +112,69 @@ open({
 
     app.get("/getRoomInfo", async (req, res) => {
       if (!req.query.name) {
-        res.send("Please provide a name!");
+        res.send({
+          message: "Please provide a name!"
+        });
         return;
       }
+
+      if (!req.query.startDate) {
+        res.send({
+          message: "Please provide a end date!"
+        });
+        return;
+      }
+
+      if (!req.query.endDate) {
+        res.send({
+          message: "Please provide a end date!"
+        });
+        return;
+      }
+      
       const room = await db.get(
         "SELECT * FROM ROOMS WHERE name like '" + req.query.name + "'"
       );
+
       if (!room) {
         res.send("Raum wurde nicht gefunden!");
         return;
       }
+
+      const measurementsLastTemp = await db.get(
+        "SELECT MAX(timestamp) from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      );
+
+      const tempMax = await db.all(
+        "SELECT MAX(temp) AS MaxTemp from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      );
+
+      const tempMin = await db.all(
+        "SELECT MIN(temp) AS MinTemp from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      );
+
+      const carbonMax = await db.all(
+        "SELECT MAX(carbon) AS CarbonMax from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      );
+
+      const carbonMin = await db.all(
+        "SELECT MIN(carbon) AS CarbonMin from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      );
+
+      const measurements = {
+        lastTemp: measurementsLastTemp,
+        maxTemp: tempMax,
+        minTemp: tempMin,
+        maxCarbon: carbonMax,
+        minCarbon: carbonMin
+      }
+
+      
       await Promise.all(
         ["minTemp", "maxTemp", "defaultTemp", "maxCarbon", "defaultCarbon"].map(
           async (element) => {
-            if (!room[element]) {
-              const configValue = await db.get(
+              if (!room[element]) {
+                const configValue = await db.get(
                 `SELECT value, type from CONFIGURATION Where key like '${element}'`
               );
               room[element] =
@@ -120,7 +193,7 @@ open({
           }
         )
       );
-      res.send({ room });
+      res.send({ room, measurements });
     });
 
     app.get("/getMeasurements", async (req, res) => {

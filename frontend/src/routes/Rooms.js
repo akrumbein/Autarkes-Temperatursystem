@@ -63,7 +63,12 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <h1>Gemessene Werte</h1>
             <h1>test</h1>
-          </div>
+          </div> availableRooms={availableRooms}
+            setAvailableRooms={setAvailableRooms}
+            setCurrentActiveRoom={setCurrentActiveRoom}
+            setChoosenRoom={setChoosenRoom}
+            choosenRoom={choosenRoom}
+            measurements={measurements}
           {measurements.map((ele) => (
             <Table
               key={ele.timestamp}
