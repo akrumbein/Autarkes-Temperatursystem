@@ -28,6 +28,7 @@ function Rooms({
   startDate,
   endDate,
   token,
+  roomInfo,
 }) {
   const [measurements, setMeasurements] = useState([]);
   const [tryToCreateRoom, setTryToCreateRoom] = useState(false);
@@ -61,9 +62,9 @@ function Rooms({
       });
   };
 
-  useEffect(()=>{
-    setCurrentPage(1)
-  }, [choosenRoom, currentActiveRoom])
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [choosenRoom, currentActiveRoom]);
 
   useEffect(() => {
     if (!choosenRoom) return;
@@ -79,7 +80,7 @@ function Rooms({
           return;
         }
         setMeasurements(response.measurements);
-        setMaxPage(response.pages)
+        setMaxPage(response.pages);
       });
 
     const interval = setInterval(() => {
@@ -95,17 +96,32 @@ function Rooms({
             return;
           }
           setMeasurements(response.measurements);
-          setMaxPage(response.pages)
+          setMaxPage(response.pages);
         });
     }, 60000);
     return () => clearInterval(interval);
   }, [choosenRoom, currentActiveRoom, startDate, endDate, currentPage]);
 
+  console.log(roomInfo.room);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems:"center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <h1>{choosenRoom && "Gemessene Werte"}</h1>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, height:"fit-content" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 10,
+            height: "fit-content",
+          }}
+        >
           {tryToCreateRoom && (
             <input
               type="text"
@@ -122,18 +138,49 @@ function Rooms({
         </div>
       </div>
       {choosenRoom &&
+        roomInfo &&
         measurements.map((ele) => (
           <Table
             key={ele.timestamp}
             title={TimeParser(ele.timestamp)}
-            values={[ele.carbon + " ppm", <div>{ele.temp}℃</div>]}
+            values={[
+              <label
+                style={{
+                  fontSize:19,
+                  color:
+                    roomInfo.room.maxCarbon < ele.carbon
+                      ? "red"
+                      : "black",
+                }}
+              >
+                {ele.carbon} ppm
+              </label>,
+              <label
+                style={{
+                  fontSize:19,
+                  color:
+                    roomInfo.room.minTemp > ele.temp ||
+                    roomInfo.room.maxTemp < ele.temp
+                      ? "red"
+                      : "black",
+                }}
+              >
+                {ele.temp}℃
+              </label>,
+            ]}
           />
         ))}
+      {choosenRoom && maxPage > 1 && (
         <div>
-          <button onClick={()=>setCurrentPage(old => old - 1)}>links</button>
+          <button onClick={() => setCurrentPage((old) => old - 1)}>
+            links
+          </button>
           <label>{currentPage}</label>
-          <button onClick={()=>setCurrentPage(old => old + 1)}>rechts</button>
+          <button onClick={() => setCurrentPage((old) => old + 1)}>
+            rechts
+          </button>
         </div>
+      )}
     </div>
   );
 }

@@ -257,6 +257,7 @@ function App() {
                 startDate={startDate}
                 endDate={endDate}
                 token={token}
+                roomInfo={roomInfo}
               />
             )}
             {route == 2 && <Settings token={token} />}
