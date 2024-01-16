@@ -92,7 +92,7 @@ function App() {
             fontSize: 42,
           }}
         >
-          <label for="userPassword">Password: </label>
+          <label>Password: </label>
           <input
             id="userPassword"
             type="password"
@@ -149,7 +149,6 @@ function App() {
                   <div>
                     <label
                       style={{ fontSize: 17, fontWeight: 500, color: "white" }}
-                      for="start"
                     >
                       {"Zeitraum: "}
                     </label>
@@ -178,7 +177,6 @@ function App() {
                     />
                     <label
                       style={{ fontSize: 17, fontWeight: 500, color: "white" }}
-                      for="end"
                     >
                       {" bis "}
                     </label>

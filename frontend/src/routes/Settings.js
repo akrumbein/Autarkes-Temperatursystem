@@ -23,7 +23,7 @@ function Settings({ token }) {
     )
       return;
     setError((old) => old.filter((ele) => ele.key != key));
-    if ((key = "password")) {
+    if ((key == "password")) {
       const value = changedSettings.find((ele) => ele.key == key).value;
       if (value.length != 4) {
         setError((old) => [
@@ -66,7 +66,7 @@ function Settings({ token }) {
           title={ele.unit}
           values={[
             error.find((element) => element.key == ele.key) && (
-              <label style={{color:"red"}}>
+              <label style={{color:"red"}} key={0}>
                 {error.find((element) => element.key == ele.key).message}
               </label>
             ),
