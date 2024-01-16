@@ -4,7 +4,9 @@ import Table from "../components/Table";
 function Home({currentActiveRoom, token, startDate, endDate}) {
   useEffect(() => {
     if (currentActiveRoom == null) return;
-    fetch(`http://localhost:6969/getRoomInfo?name=${currentActiveRoom}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}&token=${token}`)
+    fetch(`http://${
+      window.location.host.split(":")[0]
+    }:6969/getRoomInfo?name=${currentActiveRoom}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}&token=${token}`)
       .then((answer) => answer.json())
       .then((response) => {
         console.log(response);
