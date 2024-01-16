@@ -1,9 +1,6 @@
 import bcrypt from "bcrypt";
 
 const InitializeDB = async (db) => {
-  /*db.exec(`DROP TABLE ROOMS`);
-  db.exec(`DROP TABLE MEASUREMENTS`);
-  db.exec(`DROP TABLE CONFIGURATION`);*/
 
   db.exec(
     `CREATE TABLE IF NOT EXISTS ROOMS 
@@ -38,7 +35,7 @@ const InitializeDB = async (db) => {
 
   db.exec(
     `INSERT INTO Configuration (key, value, type, unit)
-        SELECT "password", "${bcrypt.hashSync("nimda", 2)}", "TEXT", "Passwort"
+        SELECT "password", "${bcrypt.hashSync("6969", 2)}", "INTEGER", "Passwort"
         WHERE NOT EXISTS (
           SELECT 1 
           FROM Configuration 

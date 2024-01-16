@@ -1,6 +1,4 @@
 import CO2Monitor from "node-co2-monitor";
-import Gpio from "onoff";
-import readline from "readline";
 
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
@@ -67,40 +65,6 @@ const readSensorData = (db) => {
         }")`
       );
     }, 1000);
-  }
-
-  try {
-    const test = Gpio.Gpio;
-
-    const sda = new test(10, "out");
-    const ledDisplay = new test(18, "out");
-    const a0Display = new test(23, "out");
-    const resetDisplay = new test(24, "out");
-
-    const test2 = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-
-    /*const currentActiveRoom = await db.get(
-        "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
-      );
-
-      const measurement = await db.get(
-        `SELECT * FROM MEASUREMENTS WHERE roomName like "${currentActiveRoom.value}" ORDER BY timestamp`
-      );
-
-    test2.question("LED?", (name) => {
-      ledDisplay.writeSync(parseInt(name));
-      test2.question("AO?", (name) => {
-        a0Display.writeSync(parseInt(name));
-        test2.question("sda?", (name) => {
-          sda.writeSync(parseInt(name));
-        });
-      });
-    });*/
-  } catch (error) {
-    console.log(error);
   }
 };
 
