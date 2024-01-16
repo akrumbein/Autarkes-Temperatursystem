@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "build": "react-scripts build",
-    "prod": "sudo serve -n -s build -l 80"
+    "prod": "serve -n -s build -l 80"
   },
   "eslintConfig": {
     "extends": [
