@@ -12,7 +12,6 @@ function App() {
   const [choosenRoom, setChoosenRoom] = useState("");
   const [availableRooms, setAvailableRooms] = useState([]);
   const [currentActiveRoom, setCurrentActiveRoom] = useState("");
-  const [measurements, setMeasurements] = useState([]);
 
   const setActiveRoom = () => {
     fetch(`http://${window.location.host.split(":")[0]}:6969/setCurrentActive?roomName=${choosenRoom}`)
@@ -31,20 +30,6 @@ function App() {
         setChoosenRoom(response.currentActiveRoom);
       });
   }, []);
-
-  useEffect(() => {
-    if (!choosenRoom) return;
-    fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
-      .then((response) => response.json())
-      .then((response) => setMeasurements(response.measurements));
-
-    const interval = setInterval(() => {
-      fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
-        .then((response) => response.json())
-        .then((response) => setMeasurements(response.measurements));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [choosenRoom]);
 
   return (
     <div style={{ backgroundColor: "#98a4ab", width: "100%", height: "100%" }}>
@@ -100,7 +85,7 @@ function App() {
             setCurrentActiveRoom={setCurrentActiveRoom}
             setChoosenRoom={setChoosenRoom}
             choosenRoom={choosenRoom}
-            measurements={measurements}
+            currentActiveRoom={currentActiveRoom}
           />
         )}
         {route == 2 && <Settings />}

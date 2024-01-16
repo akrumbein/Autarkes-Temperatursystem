@@ -14,6 +14,8 @@ open({
   driver: sqlite3.Database,
 })
   .then(async (db) => {
+    const startupTime = Date.now();
+
     await InitializeDB(db);
 
     readSensorData(db);
@@ -80,6 +82,10 @@ open({
 
       await db.exec(
         `UPDATE CONFIGURATION SET value = "${roomName}" Where key like 'currentActiveRoom'`
+      );
+
+      await db.exec(
+        `UPDATE MEASUREMENTS SET roomName = "${roomName}" WHERE timestamp > ${startupTime}`
       );
 
       res.send({ currentActiveRoom: roomName });

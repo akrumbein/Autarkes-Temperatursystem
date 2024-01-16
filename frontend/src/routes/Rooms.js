@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderButtons from "../components/HeaderButtons";
 import Table from "../components/Table";
 
@@ -18,7 +18,8 @@ const TimeParser = (timestamp) => {
   }.${year}`;
 };
 
-function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoosenRoom, choosenRoom, measurements}) {
+function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoosenRoom, choosenRoom, currentActiveRoom}) {
+  const [measurements, setMeasurements] = useState([]);
   const [tryToCreateRoom, setTryToCreateRoom] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
 
@@ -39,6 +40,20 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
         setChoosenRoom(newRoomName);
       });
   };
+
+  useEffect(() => {
+    if (!choosenRoom) return;
+    fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
+      .then((response) => response.json())
+      .then((response) => setMeasurements(response.measurements));
+
+    const interval = setInterval(() => {
+      fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
+        .then((response) => response.json())
+        .then((response) => setMeasurements(response.measurements));
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [choosenRoom, currentActiveRoom]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
