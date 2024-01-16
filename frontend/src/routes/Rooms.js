@@ -95,36 +95,32 @@ function Rooms({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
-        {tryToCreateRoom && (
-          <input
-            type="text"
-            value={newRoomName}
-            onChange={(e) => setNewRoomName(e.target.value)}
-            style={{ borderRadius: 5 }}
-            placeholder="Raumbezeichner"
-          />
-        )}
-        <HeaderButtons
-          label={tryToCreateRoom ? "Raum erstellen" : "Neuer Raum"}
-          onClick={createNewRoom}
-        />
-      </div>
-      {choosenRoom && (
-        <>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <h1>Gemessene Werte</h1>
-            <h1>test</h1>
-          </div>
-          {measurements.map((ele) => (
-            <Table
-              key={ele.timestamp}
-              title={TimeParser(ele.timestamp)}
-              values={[ele.carbon + " ppm", <div>{ele.temp}℃</div>]}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems:"center" }}>
+        <h1>{choosenRoom && "Gemessene Werte"}</h1>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, height:"fit-content" }}>
+          {tryToCreateRoom && (
+            <input
+              type="text"
+              value={newRoomName}
+              onChange={(e) => setNewRoomName(e.target.value)}
+              style={{ borderRadius: 5 }}
+              placeholder="Raumbezeichner"
             />
-          ))}
-        </>
-      )}
+          )}
+          <HeaderButtons
+            label={tryToCreateRoom ? "Raum erstellen" : "Neuer Raum"}
+            onClick={createNewRoom}
+          />
+        </div>
+      </div>
+      {choosenRoom &&
+        measurements.map((ele) => (
+          <Table
+            key={ele.timestamp}
+            title={TimeParser(ele.timestamp)}
+            values={[ele.carbon + " ppm", <div>{ele.temp}℃</div>]}
+          />
+        ))}
     </div>
   );
 }

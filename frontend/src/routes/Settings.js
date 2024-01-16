@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
 
-function Settings({token}) {
+function Settings({ token }) {
   const [settings, setSettings] = useState([]);
   const [changedSettings, setChangedSettings] = useState([]);
+  const [error, setError] = useState([]);
 
   useEffect(() => {
-    fetch(`http://${window.location.host.split(":")[0]}:6969/getConfigurations?token=${token}`)
+    fetch(
+      `http://${
+        window.location.host.split(":")[0]
+      }:6969/getConfigurations?token=${token}`
+    )
       .then((response) => response.json())
       .then((response) => setSettings(response.config));
   }, []);
@@ -17,13 +22,37 @@ function Settings({token}) {
       !changedSettings.find((ele) => ele.key == key).value
     )
       return;
+    setError((old) => old.filter((ele) => ele.key != key));
+    if ((key = "password")) {
+      const value = changedSettings.find((ele) => ele.key == key).value;
+      if (value.length != 4) {
+        setError((old) => [
+          ...old,
+          { key, message: "Passwort muss 4-stellig sein!" },
+        ]);
+        return;
+      }
+      if (!/^\d+$/.test(value)) {
+        setError((old) => [
+          ...old,
+          { key, message: "Passwort darf nur Zahlen enthalten!" },
+        ]);
+        return;
+      }
+    }
+
     fetch(
-      `http://${window.location.host.split(":")[0]}:6969/saveConfig?key=${key}&value=${
+      `http://${
+        window.location.host.split(":")[0]
+      }:6969/saveConfig?key=${key}&value=${
         changedSettings.find((ele) => ele.key == key).value
       }&token=${token}`
     )
       .then((response) => response.json())
       .then((response) => {
+        if (response.message) {
+          setError((old) => [...old, { key, message: response.message }]);
+        }
         setSettings(response.config);
         setChangedSettings((old) => old.filter((ele) => ele.key != key));
       });
@@ -36,9 +65,15 @@ function Settings({token}) {
           key={ele.key}
           title={ele.unit}
           values={[
+            error.find((element) => element.key == ele.key) && (
+              <label style={{color:"red"}}>
+                {error.find((element) => element.key == ele.key).message}
+              </label>
+            ),
+
             <input
               key={1}
-              defaultValue={ele.key != "password" ? ele.value : ""}
+              defaultValue={ele.value}
               style={{
                 width: 50,
                 margin: 15,
@@ -54,6 +89,12 @@ function Settings({token}) {
                   { key: ele.key, value: e.target.value },
                 ]);
               }}
+              {...(ele.key == "password"
+                ? {
+                    defaultValue: "",
+                    type: "password",
+                  }
+                : {})}
             />,
             changedSettings.find((element) => element.key == ele.key) ? (
               <button

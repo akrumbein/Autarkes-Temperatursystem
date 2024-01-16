@@ -20,6 +20,7 @@ const Table = ({ title, values }) => {
           display: "flex",
           justifyContent: "flex-end",
           width: "100%",
+          alignItems:"center",
           gap: 20,
         }}
       >
