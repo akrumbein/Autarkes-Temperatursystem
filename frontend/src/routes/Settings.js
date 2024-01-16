@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
 
-function Settings() {
+function Settings({token}) {
   const [settings, setSettings] = useState([]);
   const [changedSettings, setChangedSettings] = useState([]);
 
   useEffect(() => {
-    fetch(`http://${window.location.host.split(":")[0]}:6969/getConfigurations`)
+    fetch(`http://${window.location.host.split(":")[0]}:6969/getConfigurations?token=${token}`)
       .then((response) => response.json())
       .then((response) => setSettings(response.config));
   }, []);
@@ -20,7 +20,7 @@ function Settings() {
     fetch(
       `http://${window.location.host.split(":")[0]}:6969/saveConfig?key=${key}&value=${
         changedSettings.find((ele) => ele.key == key).value
-      }`
+      }&token=${token}`
     )
       .then((response) => response.json())
       .then((response) => {

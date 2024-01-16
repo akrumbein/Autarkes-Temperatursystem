@@ -14,6 +14,8 @@ open({
   driver: sqlite3.Database,
 })
   .then(async (db) => {
+    const token = (Math.random() + 1).toString(36).substring(7);
+
     const startupTime = Date.now();
 
     await InitializeDB(db);
@@ -21,6 +23,10 @@ open({
     readSensorData(db);
 
     app.get("/getAvailableRooms", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       const allrooms = await db.all("SELECT name FROM ROOMS");
       const currentActiveRoom = await db.get(
         "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
@@ -32,6 +38,10 @@ open({
     });
 
     app.get("/addRoom", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       if (!req.query.name) {
         res.send("Please provide a name!");
         return;
@@ -67,6 +77,10 @@ open({
     });
 
     app.get("/getCurrentActive", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       const currentActiveRoom = await db.get(
         "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
       );
@@ -74,6 +88,10 @@ open({
     });
 
     app.get("/setCurrentActive", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       if (!req.query.roomName) {
         res.send("Please provide a roomName!");
         return;
@@ -92,6 +110,10 @@ open({
     });
 
     app.get("/getRoomInfo", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       if (!req.query.name) {
         res.send("Please provide a name!");
         return;
@@ -130,6 +152,10 @@ open({
     });
 
     app.get("/getMeasurements", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       if (!req.query.roomName) {
         res.send("Please provide a roomName!");
         return;
@@ -146,6 +172,10 @@ open({
     });
 
     app.get("/getConfigurations", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       const config = await db.all("SELECT * from CONFIGURATION");
       config.forEach((element) => {
         element.value =
@@ -159,13 +189,17 @@ open({
     });
 
     app.get("/saveConfig", async (req, res) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({message:"Please provide a correct token!"});
+        return;
+      }
       if (!req.query.key) {
-        res.send("Please provide a key!");
+        res.send({message:"Please provide a key!"});
         return;
       }
       const key = req.query.key;
       if (!req.query.value) {
-        res.send("Please provide a value!");
+        res.send({message:"Please provide a value!"});
         return;
       }
       const value =
@@ -195,6 +229,21 @@ open({
             : element.value;
       });
       res.send({ config });
+    });
+
+    app.get("/getToken", async (req, res) => {
+      if (!req.query.password) {
+        res.send({message:"Please provide a password!"});
+        return;
+      }
+      const password = req.query.password;
+      const bdPassword = await db.get("SELECT * from CONFIGURATION WHERE key like 'password'");
+      if(bcrypt.compareSync(password, bdPassword)){
+        res.send({token: token})
+      }
+      else{
+        res.send({message: "Passwort fehlerhaft!"})
+      }
     });
 
     app.listen(port, () => {

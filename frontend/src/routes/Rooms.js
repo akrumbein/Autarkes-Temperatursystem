@@ -18,7 +18,7 @@ const TimeParser = (timestamp) => {
   }.${year}`;
 };
 
-function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoosenRoom, choosenRoom, currentActiveRoom}) {
+function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoosenRoom, choosenRoom, currentActiveRoom, token}) {
   const [measurements, setMeasurements] = useState([]);
   const [tryToCreateRoom, setTryToCreateRoom] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
@@ -31,7 +31,7 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
     if (!newRoomName || availableRooms.find((ele) => ele == newRoomName))
       return;
 
-    fetch(`http://${window.location.host.split(":")[0]}:6969/addRoom?name=${newRoomName}`)
+    fetch(`http://${window.location.host.split(":")[0]}:6969/addRoom?name=${newRoomName}&token=${token}`)
       .then((response) => response.json())
       .then((response) => {
         setAvailableRooms(response.rooms.map((ele) => ele.name));
@@ -43,12 +43,12 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
 
   useEffect(() => {
     if (!choosenRoom) return;
-    fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
+    fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}&token=${token}`)
       .then((response) => response.json())
       .then((response) => setMeasurements(response.measurements));
 
     const interval = setInterval(() => {
-      fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}`)
+      fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}&token=${token}`)
         .then((response) => response.json())
         .then((response) => setMeasurements(response.measurements));
     }, 60000);
