@@ -170,23 +170,23 @@ open({
       }
 
       const measurementsLastTemp = await db.get(
-        "SELECT MAX(timestamp) from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+        "SELECT MAX(timestamp) as measurementsLastTemp from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
       );
 
-      const tempMax = await db.all(
-        "SELECT MAX(temp) AS MaxTemp from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      const tempMax = await db.get(
+        "SELECT MAX(temp) AS tempMax from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
       );
 
-      const tempMin = await db.all(
-        "SELECT MIN(temp) AS MinTemp from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      const tempMin = await db.get(
+        "SELECT MIN(temp) AS tempMin from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
       );
 
-      const carbonMax = await db.all(
-        "SELECT MAX(carbon) AS CarbonMax from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      const carbonMax = await db.get(
+        "SELECT MAX(carbon) AS carbonMax from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
       );
 
-      const carbonMin = await db.all(
-        "SELECT MIN(carbon) AS CarbonMin from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      const carbonMin = await db.get(
+        "SELECT MIN(carbon) AS carbonMin from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
       );
 
       const firstDateOfValues = await db.get(
@@ -198,11 +198,11 @@ open({
       );
 
       const measurements = {
-        lastTemp: measurementsLastTemp,
-        maxTemp: tempMax,
-        minTemp: tempMin,
-        maxCarbon: carbonMax,
-        minCarbon: carbonMin,
+        lastTemp: measurementsLastTemp.measurementsLastTemp,
+        maxTemp: tempMax.tempMax,
+        minTemp: tempMin.tempMin,
+        maxCarbon: carbonMax.carbonMax,
+        minCarbon: carbonMin.carbonMin,
         firstDateOfValues:firstDateOfValues.firstDateOfValues,
         lastDateOfValues:lastDateOfValues.lastDateOfValues
       }
@@ -221,12 +221,6 @@ open({
                   : configValue.type == "FLOAT"
                   ? parseFloat(configValue?.value)
                   : configValue?.value;
-              console.log(
-                await db.get(
-                  `SELECT value from CONFIGURATION Where key like '${element}'`
-                )
-              );
-              console.log(room);
             }
           }
         )
