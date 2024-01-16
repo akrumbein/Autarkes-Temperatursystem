@@ -1,20 +1,6 @@
-import { useEffect } from "react";
 import Table from "../components/Table";
 
-function Home({currentActiveRoom, token, startDate, endDate}) {
-  useEffect(() => {
-    if (currentActiveRoom == null) return;
-    fetch(`http://${
-      window.location.host.split(":")[0]
-    }:6969/getRoomInfo?name=${currentActiveRoom}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}&token=${token}`)
-      .then((answer) => answer.json())
-      .then((response) => {
-        console.log(response);
-        console.log(response.measurements);
-        console.log("reponse");
-      });
-  }, [currentActiveRoom, startDate, endDate]);
-
+function Home({currentActiveRoom}) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {currentActiveRoom && (

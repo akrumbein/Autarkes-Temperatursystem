@@ -18,7 +18,17 @@ const TimeParser = (timestamp) => {
   }.${year}`;
 };
 
-function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoosenRoom, choosenRoom, currentActiveRoom, token}) {
+function Rooms({
+  availableRooms,
+  setAvailableRooms,
+  setCurrentActiveRoom,
+  setChoosenRoom,
+  choosenRoom,
+  currentActiveRoom,
+  startDate,
+  endDate,
+  token,
+}) {
   const [measurements, setMeasurements] = useState([]);
   const [tryToCreateRoom, setTryToCreateRoom] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
@@ -31,9 +41,17 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
     if (!newRoomName || availableRooms.find((ele) => ele == newRoomName))
       return;
 
-    fetch(`http://${window.location.host.split(":")[0]}:6969/addRoom?name=${newRoomName}&token=${token}`)
+    fetch(
+      `http://${
+        window.location.host.split(":")[0]
+      }:6969/addRoom?name=${newRoomName}&token=${token}`
+    )
       .then((response) => response.json())
       .then((response) => {
+        if (response.message) {
+          console.log(response.message);
+          return;
+        }
         setAvailableRooms(response.rooms.map((ele) => ele.name));
         setCurrentActiveRoom(response.currentActiveRoom);
         setTryToCreateRoom(false);
@@ -43,17 +61,37 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
 
   useEffect(() => {
     if (!choosenRoom) return;
-    fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}&token=${token}`)
+    fetch(
+      `http://${
+        window.location.host.split(":")[0]
+      }:6969/getMeasurements?roomName=${choosenRoom}&token=${token}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}`
+    )
       .then((response) => response.json())
-      .then((response) => setMeasurements(response.measurements));
+      .then((response) => {
+        if (response.message) {
+          console.log(response.message);
+          return;
+        }
+        setMeasurements(response.measurements);
+      });
 
     const interval = setInterval(() => {
-      fetch(`http://${window.location.host.split(":")[0]}:6969/getMeasurements?roomName=${choosenRoom}&token=${token}`)
+      fetch(
+        `http://${
+          window.location.host.split(":")[0]
+        }:6969/getMeasurements?roomName=${choosenRoom}&token=${token}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}`
+      )
         .then((response) => response.json())
-        .then((response) => setMeasurements(response.measurements));
+        .then((response) => {
+          if (response.message) {
+            console.log(response.message);
+            return;
+          }
+          setMeasurements(response.measurements);
+        });
     }, 60000);
     return () => clearInterval(interval);
-  }, [choosenRoom, currentActiveRoom]);
+  }, [choosenRoom, currentActiveRoom, startDate, endDate]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -77,12 +115,7 @@ function Rooms({availableRooms, setAvailableRooms, setCurrentActiveRoom, setChoo
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <h1>Gemessene Werte</h1>
             <h1>test</h1>
-          </div> availableRooms={availableRooms}
-            setAvailableRooms={setAvailableRooms}
-            setCurrentActiveRoom={setCurrentActiveRoom}
-            setChoosenRoom={setChoosenRoom}
-            choosenRoom={choosenRoom}
-            measurements={measurements}
+          </div>
           {measurements.map((ele) => (
             <Table
               key={ele.timestamp}

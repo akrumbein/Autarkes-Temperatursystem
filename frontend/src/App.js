@@ -7,13 +7,6 @@ import Export from "./routes/Export";
 import HeaderButtons from "./components/HeaderButtons";
 import RoomsSelection from "./components/RoomsSelection";
 
-const dateParser = (date) => {
-  const dd = String(date.getDate()).padStart(2, "0");
-  const mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
-  const yyyy = date.getFullYear();
-  return yyyy + "-" + mm + "-" + dd;
-};
-
 function App() {
   const [token, setToken] = useState(null);
   const [route, setRoute] = useState(0);
@@ -21,16 +14,19 @@ function App() {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [currentActiveRoom, setCurrentActiveRoom] = useState("");
   const [password, setPassword] = useState("");
-  const [startDate, setStartDate] = useState(new Date(Date.now()));
-  const [endDate, setEndDate] = useState(new Date(Date.now()));
-
-  console.log(password);
+  const [startDate, setStartDate] = useState(
+    new Date(new Date(Date.now()).setUTCHours(0, 0, 0))
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(new Date(Date.now()).setUTCHours(23, 59, 59))
+  );
+  const [roomInfo, setRoomInfo] = useState();
 
   const setActiveRoom = () => {
     fetch(
       `http://${
         window.location.host.split(":")[0]
-      }:6969/setCurrentActive?roomName=${choosenRoom}`
+      }:6969/setCurrentActive?roomName=${choosenRoom}&token=${token}`
     )
       .then((response) => response.json())
       .then((response) => {
@@ -57,7 +53,7 @@ function App() {
     fetch(
       `http://${
         window.location.host.split(":")[0]
-      }:6969/getAvailableRooms&token=${token}`
+      }:6969/getAvailableRooms?token=${token}`
     )
       .then((response) => response.json())
       .then((response) => {
@@ -67,14 +63,43 @@ function App() {
       });
   }, [token]);
 
+  useEffect(() => {
+    if (choosenRoom == null || !token) return;
+    fetch(
+      `http://${
+        window.location.host.split(":")[0]
+      }:6969/getRoomInfo?name=${choosenRoom}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}&token=${token}`
+    )
+      .then((answer) => answer.json())
+      .then((response) => {
+        if (response.message) {
+          console.log(response.message);
+          return;
+        }
+        console.log(response);
+        setRoomInfo(response);
+      });
+  }, [choosenRoom, startDate, endDate, token, currentActiveRoom]);
+
   return (
     <div style={{ backgroundColor: "#98a4ab", width: "100%", height: "100%" }}>
       {!token ? (
-      <div style={{display: "flex", flexDirection: "row", gap: 10, fontSize: 42}}>
-        <label for="userPassword">Password: </label>
-        <input id="userPassword" type="password" onChange={e => setPassword(e.target.value)} />
-        <button onClick={getToken}>send</button>
-      </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 10,
+            fontSize: 42,
+          }}
+        >
+          <label for="userPassword">Password: </label>
+          <input
+            id="userPassword"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={getToken}>send</button>
+        </div>
       ) : (
         <div
           style={{
@@ -101,41 +126,89 @@ function App() {
               );
             })}
           </div>
-          {availableRooms.length == 0 ? (
-            <h1>Es existieren noch keine Räume bitte erstellen sie einen!</h1>
-          ) : (
-            <div style={{ display: "flex", gap: 10 }}>
-              <RoomsSelection
-                choosenRoom={choosenRoom}
-                setChoosenRoom={setChoosenRoom}
-                availableRooms={availableRooms}
-                currentActiveRoom={currentActiveRoom}
-              />
-              {choosenRoom != currentActiveRoom && (
-                <HeaderButtons
-                  label={"Als aktiven Raum setzen"}
-                  onClick={setActiveRoom}
-                />
-              )}
-              <label for="start">Start date:</label>
-              <input
-                type="date"
-                id="start"
-                name="trip-start"
-                value={dateParser(startDate)}
-                onChange={(e) => setStartDate(new Date(e.target.value))}
-              />
-              <label for="end">End date:</label>
-              <input
-                type="date"
-                id="end"
-                name="trip-end"
-                value={dateParser(endDate)}
-                onChange={(e) => setEndDate(new Date(e.target.value))}
-              />
-            </div>
-          )}
-
+          {route != 2 &&
+            (availableRooms.length == 0 ? (
+              <h1>Es existieren noch keine Räume bitte erstellen sie einen!</h1>
+            ) : (
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", gap: 10 }}>
+                  <RoomsSelection
+                    choosenRoom={choosenRoom}
+                    setChoosenRoom={setChoosenRoom}
+                    availableRooms={availableRooms}
+                    currentActiveRoom={currentActiveRoom}
+                  />
+                  {choosenRoom != currentActiveRoom && (
+                    <HeaderButtons
+                      label={"Als aktiven Raum setzen"}
+                      onClick={setActiveRoom}
+                    />
+                  )}
+                </div>
+                {roomInfo && roomInfo.measurements && roomInfo.measurements.firstDateOfValues && roomInfo.measurements.lastDateOfValues && (
+                  <div>
+                    <label
+                      style={{ fontSize: 17, fontWeight: 500, color: "white" }}
+                      for="start"
+                    >
+                      {"Zeitraum: "}
+                    </label>
+                    <input
+                      type="date"
+                      id="start"
+                      name="trip-start"
+                      min={
+                        new Date(roomInfo.measurements.firstDateOfValues)
+                          .toISOString()
+                          .split("T")[0]
+                      }
+                      max={
+                        new Date(roomInfo.measurements.lastDateOfValues)
+                          .toISOString()
+                          .split("T")[0]
+                      }
+                      value={startDate.toISOString().split("T")[0]}
+                      onChange={(e) =>
+                        setStartDate(
+                          new Date(
+                            new Date(e.target.value).setUTCHours(0, 0, 0)
+                          )
+                        )
+                      }
+                    />
+                    <label
+                      style={{ fontSize: 17, fontWeight: 500, color: "white" }}
+                      for="end"
+                    >
+                      {" bis "}
+                    </label>
+                    <input
+                      type="date"
+                      id="end"
+                      name="trip-end"
+                      min={
+                        new Date(roomInfo.measurements.firstDateOfValues)
+                          .toISOString()
+                          .split("T")[0]
+                      }
+                      max={
+                        new Date(roomInfo.measurements.lastDateOfValues)
+                          .toISOString()
+                          .split("T")[0]
+                      }
+                      value={endDate.toISOString().split("T")[0]}
+                      onChange={(e) =>
+                        setEndDate(
+                          new Date(
+                            new Date(e.target.value).setUTCHours(23, 59, 59)
+                          )
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           {route == 0 && (
             <Home
               currentActiveRoom={currentActiveRoom}
@@ -152,6 +225,8 @@ function App() {
               setChoosenRoom={setChoosenRoom}
               choosenRoom={choosenRoom}
               currentActiveRoom={currentActiveRoom}
+              startDate={startDate}
+              endDate={endDate}
               token={token}
             />
           )}

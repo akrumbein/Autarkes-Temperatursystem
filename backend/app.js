@@ -189,12 +189,22 @@ open({
         "SELECT MIN(carbon) AS CarbonMin from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
       );
 
+      const firstDateOfValues = await db.get(
+        `SELECT MIN(timestamp) AS firstDateOfValues from Measurements WHERE roomName = "${req.query.name}"`
+      );
+
+      const lastDateOfValues = await db.get(
+        `SELECT MAX(timestamp) AS lastDateOfValues from Measurements WHERE roomName = "${req.query.name}"`
+      );
+
       const measurements = {
         lastTemp: measurementsLastTemp,
         maxTemp: tempMax,
         minTemp: tempMin,
         maxCarbon: carbonMax,
-        minCarbon: carbonMin
+        minCarbon: carbonMin,
+        firstDateOfValues:firstDateOfValues.firstDateOfValues,
+        lastDateOfValues:lastDateOfValues.lastDateOfValues
       }
 
       
@@ -235,8 +245,22 @@ open({
       }
       const roomName = req.query.roomName;
 
+      if (!req.query.startDate) {
+        res.send({
+          message: "Please provide a end date!"
+        });
+        return;
+      }
+
+      if (!req.query.endDate) {
+        res.send({
+          message: "Please provide a end date!"
+        });
+        return;
+      }
+
       const allMeasurements = await db.all(
-        `SELECT * FROM MEASUREMENTS WHERE roomName like "${roomName}" ORDER BY timestamp DESC LIMIT 5`
+        `SELECT * FROM MEASUREMENTS WHERE ${req.query.startDate} < timestamp AND ${req.query.endDate} > timestamp AND roomName like "${roomName}" ORDER BY timestamp DESC LIMIT 5`
       );
 
       res.send({
@@ -311,7 +335,7 @@ open({
       }
       const password = req.query.password;
       const bdPassword = await db.get("SELECT * from CONFIGURATION WHERE key like 'password'");
-      if(bcrypt.compareSync(password, bdPassword)){
+      if(bcrypt.compareSync(password, bdPassword.value)){
         res.send({token: token})
       }
       else{
