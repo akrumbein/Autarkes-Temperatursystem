@@ -103,6 +103,7 @@ function App() {
 
         {route == 0 && <Home
          currentActiveRoom={currentActiveRoom}
+         token={token}
          />}
         {route == 1 && (
           <Rooms

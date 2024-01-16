@@ -12,13 +12,13 @@ return yyyy + '-' + mm + '-' + dd;
 let realTodayForDatePicker = new Date();
 
 
-function Home({currentActiveRoom}) {
+function Home({currentActiveRoom, token}) {
   let [startDate, setStartDate] = useState(today);
   let [endDate, setEndDate] = useState(today);
 
   useEffect(() => {
     if (currentActiveRoom == null) return;
-    fetch(`http://localhost:6969/getRoomInfo?name=${currentActiveRoom}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}`)
+    fetch(`http://localhost:6969/getRoomInfo?name=${currentActiveRoom}&startDate=${startDate.getTime()}&endDate=${endDate.getTime()}&token=${token}`)
       .then((answer) => answer.json())
       .then((response) => {
         console.log(response);
