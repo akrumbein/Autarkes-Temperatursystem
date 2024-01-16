@@ -9,7 +9,7 @@ function Home({currentActiveRoom, roomInfo}) {
           <Table
             title={"Temperatur"}
             values={[
-              <h5>{roomInfo.measurements.measurementLast.temp + "℃"} </h5>,
+              <h5 style={{color: roomInfo.room.maxTemp < roomInfo.measurements.measurementLast.temp || roomInfo.room.minTemp > roomInfo.measurements.measurementLast.temp ? "red" : "black",}}>{roomInfo.measurements.measurementLast.temp + "℃"} </h5>,
               <h5>
                 {"min: " + roomInfo.measurements.minTemp.toFixed(1).toString().replaceAll(".", ",") + "℃"}
               </h5>,
@@ -21,7 +21,7 @@ function Home({currentActiveRoom, roomInfo}) {
           <Table
             title={"Co2 Gehalt"}
             values={[
-              <h5>{roomInfo.measurements.measurementLast.carbon + "ppm"}</h5>,
+              <h5 style={{color: roomInfo.room.maxCarbon < roomInfo.measurements.measurementLast.carbon ? "red" : "black",}}>{roomInfo.measurements.measurementLast.carbon + "ppm"}</h5>,
               <h5>{"min: " + roomInfo.measurements.minCarbon + "ppm"}</h5>,
               <h5>{"max: " + roomInfo.measurements.maxCarbon + "ppm"}</h5>,
             ]}
