@@ -1,6 +1,6 @@
 import CO2Monitor from "node-co2-monitor";
 import Gpio from "onoff";
-import readline from "readline"
+import readline from "readline";
 
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
@@ -73,50 +73,32 @@ const readSensorData = (db) => {
     const test = Gpio.Gpio;
 
     const sda = new test(10, "out");
-    const ledDisplay = new test(18, "out")
-    const a0Display = new test(23, "out")
-    const resetDisplay = new test(24, "out")
+    const ledDisplay = new test(18, "out");
+    const a0Display = new test(23, "out");
+    const resetDisplay = new test(24, "out");
 
     const test2 = readline.createInterface({
       input: process.stdin,
-output: process.stdout
-    })
-    blinkLED()
+      output: process.stdout,
+    });
 
-      /*const currentActiveRoom = await db.get(
+    /*const currentActiveRoom = await db.get(
         "SELECT value from CONFIGURATION Where key like 'currentActiveRoom'"
       );
 
       const measurement = await db.get(
         `SELECT * FROM MEASUREMENTS WHERE roomName like "${currentActiveRoom.value}" ORDER BY timestamp`
-      );*/
+      );
 
-
-      test2.question('LED?', name => {
-        ledDisplay.writeSync(parseInt(name));
-        test2.question('AO?', name => {
-          a0Display.writeSync(parseInt(name));
-          test2.question('sda?', name => {
-            sda.writeSync(parseInt(name));
-          });
+    test2.question("LED?", (name) => {
+      ledDisplay.writeSync(parseInt(name));
+      test2.question("AO?", (name) => {
+        a0Display.writeSync(parseInt(name));
+        test2.question("sda?", (name) => {
+          sda.writeSync(parseInt(name));
         });
-  
-        
       });
-
-      
-
-    function blinkLED() {
-      
-
-      //function to start blinking
-      //if (LED.readSync() === 0) {
-        //check the pin state, if the state is 0 (or off)
-      //  LED.writeSync(1); //set pin state to 1 (turn LED on)
-      //} else {
-      //  LED.writeSync(0); //set pin state to 0 (turn LED off)
-      //}
-    }
+    });*/
   } catch (error) {
     console.log(error);
   }
