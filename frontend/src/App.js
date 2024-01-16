@@ -101,21 +101,23 @@ function App() {
             </div>
           )}
 
-          {route == 0 && <Home />}
-          {route == 1 && (
-            <Rooms
-              availableRooms={availableRooms}
-              setAvailableRooms={setAvailableRooms}
-              setCurrentActiveRoom={setCurrentActiveRoom}
-              setChoosenRoom={setChoosenRoom}
-              choosenRoom={choosenRoom}
-              currentActiveRoom={currentActiveRoom}
-              token={token}
-            />
-          )}
-          {route == 2 && <Settings token={token}/>}
-          {route == 3 && <Export />}
-        </div>
+        {route == 0 && <Home
+         currentActiveRoom={currentActiveRoom}
+         />}
+        {route == 1 && (
+          <Rooms
+            availableRooms={availableRooms}
+            setAvailableRooms={setAvailableRooms}
+            setCurrentActiveRoom={setCurrentActiveRoom}
+            setChoosenRoom={setChoosenRoom}
+            choosenRoom={choosenRoom}
+            currentActiveRoom={currentActiveRoom}
+            token={token}
+          />
+        )}
+        {route == 2 && <Settings token={token}/>}
+        {route == 3 && <Export />}
+      </div>
       )}
     </div>
   );
