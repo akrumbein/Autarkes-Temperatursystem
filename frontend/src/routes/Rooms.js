@@ -171,13 +171,13 @@ function Rooms({
           />
         ))}
       {choosenRoom && maxPage > 1 && (
-        <div>
-          <button onClick={() => setCurrentPage((old) => old - 1)}>
-            links
+        <div style={{display: "flex", flexDirection: "row", gap: 20, justifyContent: "flex-end"}}>
+          <button onClick={() => setCurrentPage((old) => old - 1)} disabled = {currentPage == 1 ? true : false}>
+            {"<"}
           </button>
-          <label>{currentPage}</label>
+          <label style={{marginTop: 3}}>{currentPage}</label>
           <button onClick={() => setCurrentPage((old) => old + 1)}>
-            rechts
+            {">"}
           </button>
         </div>
       )}
