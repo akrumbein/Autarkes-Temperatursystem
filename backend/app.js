@@ -169,8 +169,8 @@ open({
         return;
       }
 
-      const measurementsLastTemp = await db.get(
-        "SELECT MAX(timestamp) as measurementsLastTemp from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+      const measurementLast = await db.get(
+        "SELECT * from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "' ORDER BY timestamp desc LIMIT 1"
       );
 
       const tempMax = await db.get(
@@ -198,7 +198,7 @@ open({
       );
 
       const measurements = {
-        lastTemp: measurementsLastTemp.measurementsLastTemp,
+        measurementLast: measurementLast,
         maxTemp: tempMax.tempMax,
         minTemp: tempMin.tempMin,
         maxCarbon: carbonMax.carbonMax,
