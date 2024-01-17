@@ -13,6 +13,8 @@ else:
 disp = ST7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
 rst="GPIO24", width=125, height=155, rotation=90)
 
+disp.begin()
+
 WIDTH = disp.width
 HEIGHT = disp.height
 
