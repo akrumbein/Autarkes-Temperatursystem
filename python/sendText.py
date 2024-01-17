@@ -4,8 +4,9 @@ from PIL import ImageFont
 import ST7735
 import sys
 
-if len(sys.argv) > 1:
-    text = sys.argv[1]
+if len(sys.argv) > 2:
+    temp = sys.argv[1]
+    carbon = sys.argv[2]
 else:
     exit()
 
@@ -22,5 +23,5 @@ img = Image.new('RGB', (WIDTH, HEIGHT), fill=(255, 255, 255))
 
 draw = ImageDraw.Draw(img)
 
-draw.text((5,5), text, font=font, fill=(255, 255, 255))
+draw.text((5,5), "Temperatur: " + temp + "°C/nCO2: " + carbon + " ppm", font=font, fill=(255, 255, 255))
 disp.display(img)
