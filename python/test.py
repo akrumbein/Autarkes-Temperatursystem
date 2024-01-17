@@ -2,8 +2,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import st7735
-disp = st7735.ST7735(port=0, cs=0, dc="PIN25", backlight=None,
-rst="PIN24", width=128, height=160, rotation=0, invert=False)
+disp = st7735.ST7735(port=0, cs=0, dc="25", backlight=None,
+rst="24", width=128, height=160, rotation=0, invert=False)
 
 
 WIDTH = disp.width
