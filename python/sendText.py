@@ -23,7 +23,7 @@ print(WIDTH)
 # Load default font.
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
 
-img = Image.new('RGB', (WIDTH, HEIGHT))
+img = Image.new('RGB', (WIDTH, HEIGHT), fill=(255, 255, 255))
 
 draw = ImageDraw.Draw(img)
 
