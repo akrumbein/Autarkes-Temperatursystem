@@ -13,7 +13,7 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        exec(`sudo python3 ../python/sendText.py "${temperature} test"`); 
+        exec(`sudo python3 ../python/sendText.py '${temperature} test'`); 
     });
 
       const interval = setInterval(async () => {
