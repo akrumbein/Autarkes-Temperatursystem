@@ -19,5 +19,5 @@ draw = ImageDraw.Draw(img)
 # Load default font.
 font = ImageFont.load_default()
 
-draw.text((5, 5), "SIEHT MAN DAS?", font=font, fill=(255, 255, 255))
+draw.text((0,0), "SIEHT MAN DAS?", font=font, fill=(255, 255, 255))
 disp.display(img)
