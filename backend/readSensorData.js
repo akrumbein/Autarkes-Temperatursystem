@@ -13,7 +13,7 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        exec('echo "The \\$HOME variable is $HOME"', (error, stdout, stderr) => {
+        exec('ls', (error, stdout, stderr) => {
           if (error) {
             console.error(`exec error: ${error}`);
             return;
