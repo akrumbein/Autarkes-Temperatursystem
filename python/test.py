@@ -2,16 +2,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import st7735
-
-# Create TFT LCD display class.
-disp = st7735.ST7735(
-    port=0,
-    cs=st7735.BG_SPI_CS_FRONT,  # BG_SPI_CS_BACK or BG_SPI_CS_FRONT. BG_SPI_CS_FRONT (eg: CE1) for Enviro Plus
-    dc="PIN21",                 # "GPIO9" / "PIN21". "PIN21" for a Pi 5 with Enviro Plus
-    backlight="PIN32",          # "PIN18" for back BG slot, "PIN19" for front BG slot. "PIN32" for a Pi 5 with Enviro Plus
-    rotation=90,
-    spi_speed_hz=4000000
-)
+disp = st7735.ST7735(port=0, cs=0, dc="PIN25", backlight=None,
+rst="PIN24", width=128, height=160, rotation=0, invert=False)
 
 
 WIDTH = disp.width
