@@ -13,8 +13,7 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        exec(`sudo python3 ../python/test.py ${temperature}`); 
-       // spawn(`sudo python3 /home/pi/Autarkes-Temperatursystem/python/test.py ${temperature}`)
+        exec(`sudo python3 ../python/sendText.py ${temperature}`); 
     });
 
       const interval = setInterval(async () => {
