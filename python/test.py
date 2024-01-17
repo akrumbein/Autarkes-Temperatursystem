@@ -14,7 +14,7 @@ WIDTH = disp.width
 HEIGHT = disp.height
 
 # Load default font.
-font = ImageFont.load_default()
+font = ImageFont.truetype("sans-serif.ttf", 16)
 
 text = "better than nothing"
 
