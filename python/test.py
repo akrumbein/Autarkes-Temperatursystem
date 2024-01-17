@@ -3,8 +3,8 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import time
 import st7735
-disp = st7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
-rst="GPIO24", width=160, height=128, rotation=0,
+disp = st7735.ST7735(port=0, cs=1, dc="GPIO25", backlight=None,
+rst="GPIO24", width=128, height=160, rotation=0,
     spi_speed_hz=4000000, invert=False)
 
 # Initialize display.
@@ -20,7 +20,6 @@ draw = ImageDraw.Draw(img)
 # Load default font.
 font = ImageFont.load_default()
 
-while True:
-    draw.rectangle((0, 0, 160, 80), (0, 0, 0))
-    draw.text((5, 5), "SIEHT MAN DAS?", font=font, fill=(255, 255, 255))
-    disp.display(img)
+draw.rectangle((0, 0, 160, 80), (0, 0, 0))
+draw.text((5, 5), "SIEHT MAN DAS?", font=font, fill=(255, 255, 255))
+disp.display(img)
