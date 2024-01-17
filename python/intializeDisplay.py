@@ -9,8 +9,6 @@ rst="GPIO24", width=125, height=155, rotation=90)
 # Initialize display.
 #disp.begin()
 
-
-
 WIDTH = disp.width
 HEIGHT = disp.height
 
