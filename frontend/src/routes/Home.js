@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { AxisConfig } from '@mui/x-charts';
 
 function Home({
   currentActiveRoom,
@@ -46,8 +45,6 @@ function Home({
     }, 60000);
     return () => clearInterval(interval);
   }, [choosenRoom, currentActiveRoom, startDate, endDate]);
-
-  console.log(measurements);
 
   return (
     roomInfo && (
@@ -106,22 +103,26 @@ function Home({
                 <h5>{"max: " + roomInfo.measurements.maxCarbon + "ppm"}</h5>,
               ]}
             />
-            <BarChart
-              width={800}
-              height={500}
-              xAxis={[
-                {
-                  data: measurements.map(ele => new Date(ele.timestamp).toLocaleString()),
-                  scaleType: 'band',
-                },
-              ]}
-              yAxis={[{}]}
-              series={[
-                {
-                  data: measurements.map(ele => ele.temp),
-                },
-              ]}
-            />
+            {measurements.length > 0 && (
+              <BarChart
+                width={800}
+                height={500}
+                xAxis={[
+                  {
+                    data: measurements?.map((ele) =>
+                      new Date(ele?.timestamp).toLocaleString()
+                    ),
+                    scaleType: "band",
+                  },
+                ]}
+                yAxis={[{}]}
+                series={[
+                  {
+                    data: measurements?.map((ele) => ele?.temp),
+                  },
+                ]}
+              />
+            )}
           </>
         )}
       </div>
