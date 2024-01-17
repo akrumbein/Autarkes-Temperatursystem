@@ -13,7 +13,14 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        exec('echo "The \\$HOME variable is $HOME"')
+        exec('echo "The \\$HOME variable is $HOME"', (error, stdout, stderr) => {
+          if (error) {
+            console.error(`exec error: ${error}`);
+            return;
+          }
+          console.log(`stdout: ${stdout}`);
+          console.error(`stderr: ${stderr}`);
+        }); 
        // spawn(`sudo python3 /home/pi/Autarkes-Temperatursystem/python/test.py ${temperature}`)
         console.log(`temp: ${ temperature }`);
     });
