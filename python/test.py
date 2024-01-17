@@ -5,7 +5,7 @@ import time
 import st7735
 disp = st7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
 rst="GPIO24", width=128, height=160, rotation=0,
-    spi_speed_hz=4000000)
+    spi_speed_hz=4000000, invert=False)
 
 # Initialize display.
 disp.begin()
@@ -17,8 +17,8 @@ HEIGHT = disp.height
 img = Image.new('RGB', (WIDTH, HEIGHT), color=(0, 0, 0))
 
 draw = ImageDraw.Draw(img)
-
-font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 30)
+# Load default font.
+font = ImageFont.load_default()
 
 while True:
     draw.rectangle((0, 0, 160, 80), (0, 0, 0))
