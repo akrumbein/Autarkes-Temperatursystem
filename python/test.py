@@ -15,7 +15,7 @@ HEIGHT = disp.height
 print(WIDTH)
 
 # Load default font.
-font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 30)
+font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
 
 text = "better\n than\n nothing\n"
 
