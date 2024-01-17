@@ -1,11 +1,8 @@
 import CO2Monitor from "node-co2-monitor";
+import { spawn } from 'node:child_process';
 
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
-
-  monitor.on('temp', (temperature) => {
-    console.log(`temp: ${ temperature }`);
-});
 
   try {
     // Connect device.
@@ -14,6 +11,11 @@ const readSensorData = (db) => {
         return console.error(err.stack);
       }
       console.log("Monitor connected.");
+
+      monitor.on('temp', (temperature) => {
+        spawn(`sudo python3 ./../python/test.py ${temperature}`)
+        console.log(`temp: ${ temperature }`);
+    });
 
       const interval = setInterval(async () => {
         const currentInterval = await db.get(
