@@ -3,7 +3,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import ST7735
 disp = ST7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
-rst="GPIO24", width=125, height=120, rotation=0)
+rst="GPIO24", width=125, height=125, rotation=0)
 
 # Initialize display.
 disp.begin()
