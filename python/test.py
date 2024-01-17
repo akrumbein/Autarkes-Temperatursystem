@@ -19,10 +19,10 @@ font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
 
 text = "better\n than\n nothing\n"
 
-img = Image.new('RGB', (HEIGHT, WIDTH))
+img = Image.new('RGB', (WIDTH, HEIGHT))
 
 draw = ImageDraw.Draw(img)
 
 
-draw.text((0,0), text, font=font, fill=(255, 255, 255))
+draw.text((5,5), text, font=font, fill=(255, 255, 255))
 disp.display(img)
