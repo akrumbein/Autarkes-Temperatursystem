@@ -13,7 +13,7 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        exec('cd ../python/ & ls', (error, stdout, stderr) => {
+        exec(`sudo python3 ../python/test.py ${tenperature}`, (error, stdout, stderr) => {
           if (error) {
             console.error(`exec error: ${error}`);
             return;
