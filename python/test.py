@@ -13,7 +13,7 @@ WIDTH = disp.width
 HEIGHT = disp.height
 
 # Load default font.
-font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16)
+font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 30)
 
 text = "better than nothing"
 
