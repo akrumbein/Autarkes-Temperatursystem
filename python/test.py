@@ -4,7 +4,7 @@ from PIL import ImageFont
 import time
 import st7735
 disp = st7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
-rst="GPIO24", width=128, height=160, rotation=90,
+rst="GPIO24", width=128, height=160, rotation=0,
     spi_speed_hz=4000000)
 
 # Initialize display.
