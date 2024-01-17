@@ -13,11 +13,15 @@ disp.begin()
 WIDTH = disp.width
 HEIGHT = disp.height
 
-img = Image.new('RGB', (WIDTH, HEIGHT), color=(0, 0, 0))
-
-draw = ImageDraw.Draw(img)
 # Load default font.
 font = ImageFont.load_default()
 
-draw.text((0,0), "SIEHT MAN DAS?", font=font, fill=(255, 255, 255))
+text = "better than nothing"
+
+img = Image.new('RGB', font.getsize(text), color=(0, 0, 0))
+
+draw = ImageDraw.Draw(img)
+
+
+draw.text((0,0), text, font=font, fill=(255, 255, 255))
 disp.display(img)
