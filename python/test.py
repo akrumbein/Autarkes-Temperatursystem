@@ -12,10 +12,12 @@ disp.begin()
 WIDTH = disp.width
 HEIGHT = disp.height
 
+print(WIDTH)
+
 # Load default font.
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 30)
 
-text = "better than nothing"
+text = "better\n than\n nothing\n"
 
 img = Image.new('RGB', (WIDTH, HEIGHT))
 
