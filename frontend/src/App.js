@@ -63,7 +63,8 @@ function App() {
       });
   }, [token]);
 
-  useEffect(() => {
+
+  const fetchRoomInfo = () =>{
     if (choosenRoom == null || !token) return;
     fetch(
       `http://${
@@ -78,6 +79,10 @@ function App() {
         }
         setRoomInfo(response);
       });
+  }
+
+  useEffect(() => {
+    fetchRoomInfo()
   }, [choosenRoom, startDate, endDate, token, currentActiveRoom]);
 
   return (
@@ -123,7 +128,7 @@ function App() {
               }}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <HeaderButtons onClick={getToken} label={"einloggen"}/>
+            <HeaderButtons onClick={getToken} label={"einloggen"} />
           </div>
         ) : (
           <>
@@ -176,7 +181,7 @@ function App() {
                             color: "white",
                           }}
                         >
-                          {"Zeitraum: "}
+                          {"Zeitraum:"}
                         </label>
                         <input
                           type="date"
@@ -200,6 +205,12 @@ function App() {
                               )
                             )
                           }
+                          style={{
+                            width: "fit-content",
+                            marginLeft: 10,
+                            padding: 5,
+                            borderRadius: 10,
+                          }}
                         />
                         <label
                           style={{
@@ -208,7 +219,7 @@ function App() {
                             color: "white",
                           }}
                         >
-                          {" bis "}
+                          {" bis"}
                         </label>
                         <input
                           type="date"
@@ -232,6 +243,12 @@ function App() {
                               )
                             )
                           }
+                          style={{
+                            width: "fit-content",
+                            marginLeft: 10,
+                            padding: 5,
+                            borderRadius: 10,
+                          }}
                         />
                       </div>
                     )}
@@ -260,8 +277,15 @@ function App() {
                 roomInfo={roomInfo}
               />
             )}
-            {route == 2 && <Settings token={token} />}
-            {route == 3 && <Export />}
+            {route == 2 && <Settings token={token} fetchRoomInfo={fetchRoomInfo}/>}
+            {route == 3 && (
+              <Export
+                choosenRoom={choosenRoom}
+                startDate={startDate}
+                endDate={endDate}
+                token={token}
+              />
+            )}
           </>
         )}
       </div>

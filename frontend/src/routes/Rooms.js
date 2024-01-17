@@ -34,7 +34,7 @@ function Rooms({
   const [tryToCreateRoom, setTryToCreateRoom] = useState(false);
   const [newRoomName, setNewRoomName] = useState("");
   const [maxPage, setMaxPage] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const createNewRoom = () => {
     if (!tryToCreateRoom) {
@@ -101,8 +101,6 @@ function Rooms({
     }, 60000);
     return () => clearInterval(interval);
   }, [choosenRoom, currentActiveRoom, startDate, endDate, currentPage]);
-
-  console.log(roomInfo.room);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -172,11 +170,11 @@ function Rooms({
         ))}
       {choosenRoom && maxPage > 1 && (
         <div style={{display: "flex", flexDirection: "row", gap: 20, justifyContent: "flex-end"}}>
-          <button onClick={() => setCurrentPage((old) => old - 1)} disabled = {currentPage == 1 ? true : false}>
+          <button onClick={() => setCurrentPage((old) => old - 1)} disabled = {currentPage == 0 ? true : false}>
             {"<"}
           </button>
-          <label style={{marginTop: 3}}>{currentPage}</label>
-          <button onClick={() => setCurrentPage((old) => old + 1)}>
+          <label style={{marginTop: 3}}>{currentPage + 1}</label>
+          <button onClick={() => setCurrentPage((old) => old + 1)} disabled = {currentPage == maxPage - 1 ? true : false}>
             {">"}
           </button>
         </div>

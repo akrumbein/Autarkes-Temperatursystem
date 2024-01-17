@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Table from "../components/Table";
 
-function Settings({ token }) {
+function Settings({ token, fetchRoomInfo }) {
   const [settings, setSettings] = useState([]);
   const [changedSettings, setChangedSettings] = useState([]);
   const [error, setError] = useState([]);
@@ -55,6 +55,7 @@ function Settings({ token }) {
         }
         setSettings(response.config);
         setChangedSettings((old) => old.filter((ele) => ele.key != key));
+        fetchRoomInfo();
       });
   };
 

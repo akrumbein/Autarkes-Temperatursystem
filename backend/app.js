@@ -5,6 +5,9 @@ import bcrypt from "bcrypt";
 import { open } from "sqlite";
 import InitializeDB from "./db/initialize.js";
 import readSensorData from "./readSensorData.js";
+import fs from "fs";
+import { stringify } from "csv-stringify";
+import * as StreamPromises from "stream/promises";
 
 const app = express();
 const port = 6969;
@@ -23,23 +26,26 @@ open({
     readSensorData(db);
 
     app.get("/getFilteredMeasurements", async (req, res) => {
-
       if (!req.query.startDate) {
         res.send({
-          message: "Please provide a end date!"
+          message: "Please provide a end date!",
         });
         return;
       }
 
       if (!req.query.endDate) {
         res.send({
-          message: "Please provide a end date!"
+          message: "Please provide a end date!",
         });
         return;
       }
 
       const measurements = await db.all(
-        "SELECT * from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp"
+        "SELECT * from Measurements WHERE " +
+          req.query.startDate +
+          " < timestamp AND " +
+          req.query.endDate +
+          " > timestamp"
       );
 
       res.send({
@@ -49,7 +55,7 @@ open({
 
     app.get("/getAvailableRooms", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       const allrooms = await db.all("SELECT name FROM ROOMS");
@@ -64,7 +70,7 @@ open({
 
     app.get("/addRoom", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       if (!req.query.name) {
@@ -103,7 +109,7 @@ open({
 
     app.get("/getCurrentActive", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       const currentActiveRoom = await db.get(
@@ -114,7 +120,7 @@ open({
 
     app.get("/setCurrentActive", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       if (!req.query.roomName) {
@@ -136,30 +142,30 @@ open({
 
     app.get("/getRoomInfo", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       if (!req.query.name) {
         res.send({
-          message: "Please provide a name!"
+          message: "Please provide a name!",
         });
         return;
       }
 
       if (!req.query.startDate) {
         res.send({
-          message: "Please provide a end date!"
+          message: "Please provide a end date!",
         });
         return;
       }
 
       if (!req.query.endDate) {
         res.send({
-          message: "Please provide a end date!"
+          message: "Please provide a end date!",
         });
         return;
       }
-      
+
       const room = await db.get(
         "SELECT * FROM ROOMS WHERE name like '" + req.query.name + "'"
       );
@@ -170,23 +176,53 @@ open({
       }
 
       const measurementLast = await db.get(
-        "SELECT * from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "' ORDER BY timestamp desc LIMIT 1"
+        "SELECT * from Measurements WHERE " +
+          req.query.startDate +
+          " < timestamp AND " +
+          req.query.endDate +
+          " > timestamp AND roomName = '" +
+          req.query.name +
+          "' ORDER BY timestamp desc LIMIT 1"
       );
 
       const tempMax = await db.get(
-        "SELECT MAX(temp) AS tempMax from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+        "SELECT MAX(temp) AS tempMax from Measurements WHERE " +
+          req.query.startDate +
+          " < timestamp AND " +
+          req.query.endDate +
+          " > timestamp AND roomName = '" +
+          req.query.name +
+          "'"
       );
 
       const tempMin = await db.get(
-        "SELECT MIN(temp) AS tempMin from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+        "SELECT MIN(temp) AS tempMin from Measurements WHERE " +
+          req.query.startDate +
+          " < timestamp AND " +
+          req.query.endDate +
+          " > timestamp AND roomName = '" +
+          req.query.name +
+          "'"
       );
 
       const carbonMax = await db.get(
-        "SELECT MAX(carbon) AS carbonMax from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+        "SELECT MAX(carbon) AS carbonMax from Measurements WHERE " +
+          req.query.startDate +
+          " < timestamp AND " +
+          req.query.endDate +
+          " > timestamp AND roomName = '" +
+          req.query.name +
+          "'"
       );
 
       const carbonMin = await db.get(
-        "SELECT MIN(carbon) AS carbonMin from Measurements WHERE " + req.query.startDate + " < timestamp AND " + req.query.endDate + " > timestamp AND roomName = '" + req.query.name + "'"
+        "SELECT MIN(carbon) AS carbonMin from Measurements WHERE " +
+          req.query.startDate +
+          " < timestamp AND " +
+          req.query.endDate +
+          " > timestamp AND roomName = '" +
+          req.query.name +
+          "'"
       );
 
       const firstDateOfValues = await db.get(
@@ -203,16 +239,15 @@ open({
         minTemp: tempMin.tempMin,
         maxCarbon: carbonMax.carbonMax,
         minCarbon: carbonMin.carbonMin,
-        firstDateOfValues:firstDateOfValues.firstDateOfValues,
-        lastDateOfValues:lastDateOfValues.lastDateOfValues
-      }
+        firstDateOfValues: firstDateOfValues.firstDateOfValues,
+        lastDateOfValues: lastDateOfValues.lastDateOfValues,
+      };
 
-      
       await Promise.all(
         ["minTemp", "maxTemp", "defaultTemp", "maxCarbon", "defaultCarbon"].map(
           async (element) => {
-              if (!room[element]) {
-                const configValue = await db.get(
+            if (!room[element]) {
+              const configValue = await db.get(
                 `SELECT value, type from CONFIGURATION Where key like '${element}'`
               );
               room[element] =
@@ -230,51 +265,57 @@ open({
 
     app.get("/getMeasurements", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       if (!req.query.roomName) {
-        res.send({message:"Please provide a roomName!"});
+        res.send({ message: "Please provide a roomName!" });
         return;
       }
       const roomName = req.query.roomName;
 
       if (!req.query.page) {
-        res.send({message:"Please provide a page!"});
+        res.send({ message: "Please provide a page!" });
         return;
       }
 
       if (!req.query.startDate) {
         res.send({
-          message: "Please provide a end date!"
+          message: "Please provide a end date!",
         });
         return;
       }
 
       if (!req.query.endDate) {
         res.send({
-          message: "Please provide a end date!"
+          message: "Please provide a end date!",
         });
         return;
       }
 
       const allMeasurements = await db.all(
-        `SELECT * FROM MEASUREMENTS WHERE ${req.query.startDate} < timestamp AND ${req.query.endDate} > timestamp AND roomName like "${roomName}" ORDER BY timestamp DESC LIMIT 5 OFFSET ${req.query.page*5}`
+        `SELECT * FROM MEASUREMENTS WHERE ${
+          req.query.startDate
+        } < timestamp AND ${
+          req.query.endDate
+        } > timestamp AND roomName like "${roomName}" ORDER BY timestamp DESC LIMIT 5 OFFSET ${
+          req.query.page * 5
+        }`
       );
 
-      const countMeasurements= await db.get(
+      const countMeasurements = await db.get(
         `SELECT COUNT(*) as countMeasurements FROM MEASUREMENTS WHERE ${req.query.startDate} < timestamp AND ${req.query.endDate} > timestamp AND roomName like "${roomName}"`
-      )
+      );
 
       res.send({
         measurements: allMeasurements,
-        pages: parseInt(countMeasurements.countMeasurements/5) + 1
+        pages: parseInt(countMeasurements.countMeasurements / 5) + 1,
       });
     });
 
     app.get("/getConfigurations", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       const config = await db.all("SELECT * from CONFIGURATION");
@@ -291,16 +332,16 @@ open({
 
     app.get("/saveConfig", async (req, res) => {
       if (!req.query.token || req.query.token != token) {
-        res.send({message:"Please provide a correct token!"});
+        res.send({ message: "Please provide a correct token!" });
         return;
       }
       if (!req.query.key) {
-        res.send({message:"Please provide a key!"});
+        res.send({ message: "Please provide a key!" });
         return;
       }
       const key = req.query.key;
       if (!req.query.value) {
-        res.send({message:"Please provide a value!"});
+        res.send({ message: "Please provide a value!" });
         return;
       }
       const value =
@@ -334,17 +375,102 @@ open({
 
     app.get("/getToken", async (req, res) => {
       if (!req.query.password) {
-        res.send({message:"Please provide a password!"});
+        res.send({ message: "Please provide a password!" });
         return;
       }
       const password = req.query.password;
-      const bdPassword = await db.get("SELECT * from CONFIGURATION WHERE key like 'password'");
-      if(bcrypt.compareSync(password, bdPassword.value)){
-        res.send({token: token})
+      const bdPassword = await db.get(
+        "SELECT * from CONFIGURATION WHERE key like 'password'"
+      );
+      if (bcrypt.compareSync(password, bdPassword.value)) {
+        res.send({ token: token });
+      } else {
+        res.send({ message: "Passwort fehlerhaft!" });
       }
-      else{
-        res.send({message: "Passwort fehlerhaft!"})
+    });
+
+    app.get("/exportData", async (req, res, next) => {
+      if (!req.query.token || req.query.token != token) {
+        res.send({ message: "Please provide a correct token!" });
+        return;
       }
+
+      if (!req.query.roomName) {
+        res.send({ message: "Please provide a roomName!" });
+        return;
+      }
+
+      if (!req.query.startDate) {
+        res.send({
+          message: "Please provide a end date!",
+        });
+        return;
+      }
+
+      if (!req.query.endDate) {
+        res.send({
+          message: "Please provide a end date!",
+        });
+        return;
+      }
+      let columns = ["id", "temp", "carbon", "timestamp", "roomName"];
+      if (req?.query?.noTemperature == "true") {
+        columns = columns.filter((ele) => ele != "temp");
+      }
+
+      if (req?.query?.noCarbon == "true") {
+        columns = columns.filter((ele) => ele != "carbon");
+      }
+
+      if (req?.query?.noId == "true") {
+        columns = columns.filter((ele) => ele != "id");
+      }
+
+      if (req?.query?.noTime == "true") {
+        columns = columns.filter((ele) => ele != "timestamp");
+      }
+
+      if (req?.query?.noRoomName == "true") {
+        columns = columns.filter((ele) => ele != "roomName");
+      }
+
+      const stringifier = stringify({
+        header: req?.query?.header == "true" ? true : false,
+        columns: columns,
+      });
+      let allMeasurements = await db.all(
+        `SELECT * FROM MEASUREMENTS WHERE ${req.query.startDate} < timestamp AND ${req.query.endDate} > timestamp AND roomName like "${req.query.roomName}" ORDER BY timestamp DESC`
+      );
+
+      allMeasurements = allMeasurements.map((ele) => {
+        let newTime = ele.timestamp;
+        switch (req?.query?.timeFormat) {
+          case "ISO":
+            newTime = new Date(ele.timestamp).toISOString();
+            break;
+          case "UTC":
+            newTime = new Date(ele.timestamp).toUTCString();
+            break;
+          case "DE":
+            newTime = new Date(ele.timestamp).toLocaleString();
+            break;
+
+          default:
+            break;
+        }
+        return { ...ele, timestamp: newTime };
+      });
+
+      res.set("Content-Type", "text/csv; charset=utf-8");
+      res.header(
+        `Content-Disposition`,
+        `attachment; filename="${req.query.roomName}_${
+          new Date(Date.now()).toLocaleString().replaceAll(", ", "_")}.csv"`
+      );
+
+      stringifier.pipe(res);
+      allMeasurements.forEach((ele) => stringifier.write(ele));
+      res.end();
     });
 
     app.listen(port, () => {
