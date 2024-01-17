@@ -3,7 +3,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import time
 import st7735
-disp = st7735.ST7735(port=0, cs=st7735.BG_SPI_CS_FRONT, dc="GPIO25", backlight=None,
+disp = st7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
 rst="GPIO24", width=128, height=160, rotation=90,
     spi_speed_hz=4000000)
 
@@ -14,7 +14,7 @@ disp.begin()
 WIDTH = disp.width
 HEIGHT = disp.height
 
-image = Image.open("deployrainbows.gif")
+image = Image.open("./deployrainbows.gif")
 
 print("Drawing gif, press Ctrl+C to exit!")
 
