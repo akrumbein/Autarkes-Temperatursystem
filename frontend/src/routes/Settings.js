@@ -61,7 +61,7 @@ function Settings({ token, fetchRoomInfo }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      {settings.map((ele) => (
+      {settings.filter(ele => !(ele.key == "password" || ele.key == "defaultCarbon" || ele.key == "defaultTemp" || ele.key == "currentActiveRoom")).map((ele) => (
         <Table
           key={ele.key}
           title={ele.unit}

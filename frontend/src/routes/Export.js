@@ -100,14 +100,14 @@ function Export({ choosenRoom, startDate, endDate, token }) {
             <label>CSV</label>
           </div>
 
-          <div>
+          {/*<div>
             <input
               type="checkbox"
               checked={wantPDF}
               onChange={() => setWantPDF((old) => !old)}
             />
             <label>PDF</label>
-          </div>
+            </div>*/}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
