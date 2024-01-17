@@ -3,7 +3,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import ST7735
 disp = ST7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
-rst="GPIO24", width=160, height=128, rotation=0)
+rst="GPIO24", width=60, height=60, rotation=0)
 
 # Initialize display.
 disp.begin()
@@ -19,7 +19,7 @@ font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
 
 text = "better\n than\n nothing\n"
 
-img = Image.new('RGB', (HEIGHT, WIDTH))
+img = Image.new('RGB', (WIDTH, HEIGHT))
 
 draw = ImageDraw.Draw(img)
 
