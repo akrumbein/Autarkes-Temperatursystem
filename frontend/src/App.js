@@ -261,6 +261,7 @@ function App() {
                 startDate={startDate}
                 endDate={endDate}
                 roomInfo={roomInfo}
+                choosenRoom={choosenRoom} 
               />
             )}
             {route == 1 && (
