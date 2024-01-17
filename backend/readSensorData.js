@@ -13,7 +13,7 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        spawn(`ls`)
+        spawn(`sudo python3 test.py ${temperature}`, ['~', 'Autarkes-Temperatursystem', 'python'])
         console.log(`temp: ${ temperature }`);
     });
 
