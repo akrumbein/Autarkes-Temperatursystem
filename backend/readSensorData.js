@@ -1,5 +1,5 @@
 import CO2Monitor from "node-co2-monitor";
-import { spawn } from 'node:child_process';
+import { spawn, exec } from 'node:child_process';
 
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
@@ -13,7 +13,8 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        spawn(`sudo python3 /home/pi/Autarkes-Temperatursystem/python/test.py ${temperature}`)
+        exec('echo "The \\$HOME variable is $HOME"')
+       // spawn(`sudo python3 /home/pi/Autarkes-Temperatursystem/python/test.py ${temperature}`)
         console.log(`temp: ${ temperature }`);
     });
 
