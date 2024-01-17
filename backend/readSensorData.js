@@ -3,6 +3,10 @@ import CO2Monitor from "node-co2-monitor";
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
 
+  monitor.on('temp', (temperature) => {
+    console.log(`temp: ${ temperature }`);
+});
+
   try {
     // Connect device.
     monitor.connect((err) => {
