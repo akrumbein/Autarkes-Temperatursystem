@@ -5,9 +5,7 @@ import bcrypt from "bcrypt";
 import { open } from "sqlite";
 import InitializeDB from "./db/initialize.js";
 import readSensorData from "./readSensorData.js";
-import fs from "fs";
 import { stringify } from "csv-stringify";
-import * as StreamPromises from "stream/promises";
 
 const app = express();
 const port = 6969;

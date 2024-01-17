@@ -1,5 +1,5 @@
 import CO2Monitor from "node-co2-monitor";
-import { spawn, exec } from 'node:child_process';
+import { exec } from 'node:child_process';
 
 const readSensorData = (db) => {
   const monitor = new CO2Monitor();
@@ -13,7 +13,7 @@ const readSensorData = (db) => {
       console.log("Monitor connected.");
 
       monitor.on('temp', (temperature) => {
-        exec(`sudo python3 ../python/sendText.py ${temperature}`); 
+        exec(`sudo python3 ../python/sendText.py "${temperature} test"`); 
     });
 
       const interval = setInterval(async () => {
