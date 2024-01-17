@@ -13,7 +13,7 @@ draw = ImageDraw.Draw(img)
 # Load default font.
 font = ImageFont.load_default()
 # Write some text
-draw.text((5, 5), "Hello from AZ-delivery!", font=font,
+draw.text((5, 5), "nö", font=font,
 fill=(255, 255, 255))
 # display!
 disp.display(img)
