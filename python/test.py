@@ -20,7 +20,6 @@ draw = ImageDraw.Draw(img)
 # Load default font.
 font = ImageFont.load_default()
 
-while(True):
-    draw.rectangle((0, 0, 160, 80), (0, 0, 0))
-    draw.text((5, 5), "SIEHT MAN DAS?", font=font, fill=(255, 255, 255))
-    disp.display(img)
+draw.rectangle((0, 0, 160, 80), (0, 0, 0))
+draw.text((5, 5), "SIEHT MAN DAS?", font=font, fill=(255, 255, 255))
+disp.display(img)
