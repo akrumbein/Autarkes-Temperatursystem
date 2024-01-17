@@ -9,15 +9,18 @@ if len(sys.argv) > 1:
 else:
     exit()
 
+disp = ST7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
+rst="GPIO24", width=125, height=155, rotation=90)
+
+WIDTH = disp.width
+HEIGHT = disp.height
+
 # Load default font.
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
 
-img = Image.new('RGB', (125, 155), fill=(255, 255, 255))
+img = Image.new('RGB', (WIDTH, HEIGHT), fill=(255, 255, 255))
 
 draw = ImageDraw.Draw(img)
 
 draw.text((5,5), text, font=font, fill=(255, 255, 255))
-
-disp = ST7735.ST7735(port=0, cs=0, dc="GPIO25", backlight=None,
-rst="GPIO24", width=125, height=155, rotation=90)
 disp.display(img)
