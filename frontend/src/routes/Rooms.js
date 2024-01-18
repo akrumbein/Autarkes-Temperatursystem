@@ -63,7 +63,7 @@ function Rooms({
   };
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(0);
   }, [choosenRoom, currentActiveRoom]);
 
   useEffect(() => {
