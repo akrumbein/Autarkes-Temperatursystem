@@ -83,6 +83,10 @@ function App() {
 
   useEffect(() => {
     fetchRoomInfo()
+    const interval = setInterval(() => {
+      fetchRoomInfo()
+    }, 600);
+    return () => clearInterval(interval);
   }, [choosenRoom, startDate, endDate, token, currentActiveRoom]);
 
   return (
