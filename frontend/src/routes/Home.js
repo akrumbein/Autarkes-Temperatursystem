@@ -65,11 +65,11 @@ function Home({
                         : "black",
                   }}
                 >
-                  {roomInfo?.measurements?.measurementLast?.temp + "℃"}{" "}
+                  {(roomInfo?.measurements?.measurementLast?.temp | 0) + "℃"}{" "}
                 </h5>,
                 <h5>
                   {"min: " +
-                    roomInfo?.measurements?.minTemp
+                    (roomInfo?.measurements?.minTemp |0)
                       ?.toFixed(1)
                       ?.toString()
                       ?.replaceAll(".", ",") +
@@ -77,7 +77,7 @@ function Home({
                 </h5>,
                 <h5>
                   {"max: " +
-                    roomInfo?.measurements?.maxTemp
+                    (roomInfo?.measurements?.maxTemp |0)
                       ?.toFixed(1)
                       ?.toString()
                       ?.replaceAll(".", ",") +
@@ -97,13 +97,13 @@ function Home({
                         : "black",
                   }}
                 >
-                  {roomInfo?.measurements?.measurementLast?.carbon + "ppm"}
+                  {(roomInfo?.measurements?.measurementLast?.carbon | 0 ) + "ppm"}
                 </h5>,
-                <h5>{"min: " + roomInfo?.measurements?.minCarbon + "ppm"}</h5>,
-                <h5>{"max: " + roomInfo?.measurements?.maxCarbon + "ppm"}</h5>,
+                <h5>{"min: " + (roomInfo?.measurements?.minCarbon | 0) + "ppm"}</h5>,
+                <h5>{"max: " + (roomInfo?.measurements?.maxCarbon | 0) + "ppm"}</h5>,
               ]}
             />
-            {measurements.length > 0 && (
+            {measurements?.length > 0 && (
               <BarChart
                 width={800}
                 height={500}
