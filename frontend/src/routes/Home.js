@@ -42,7 +42,7 @@ function Home({
           }
           setMeasurements(response.measurements);
         });
-    }, 60000);
+    }, 600);
     return () => clearInterval(interval);
   }, [choosenRoom, currentActiveRoom, startDate, endDate]);
 
@@ -70,17 +70,17 @@ function Home({
                 <h5>
                   {"min: " +
                     roomInfo?.measurements?.minTemp
-                      .toFixed(1)
-                      .toString()
-                      .replaceAll(".", ",") +
+                      ?.toFixed(1)
+                      ?.toString()
+                      ?.replaceAll(".", ",") +
                     "℃"}
                 </h5>,
                 <h5>
                   {"max: " +
                     roomInfo?.measurements?.maxTemp
-                      .toFixed(1)
-                      .toString()
-                      .replaceAll(".", ",") +
+                      ?.toFixed(1)
+                      ?.toString()
+                      ?.replaceAll(".", ",") +
                     "℃"}
                 </h5>,
               ]}

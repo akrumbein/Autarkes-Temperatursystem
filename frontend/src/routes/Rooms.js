@@ -98,7 +98,7 @@ function Rooms({
           setMeasurements(response.measurements);
           setMaxPage(response.pages);
         });
-    }, 60000);
+    }, 600);
     return () => clearInterval(interval);
   }, [choosenRoom, currentActiveRoom, startDate, endDate, currentPage]);
 
